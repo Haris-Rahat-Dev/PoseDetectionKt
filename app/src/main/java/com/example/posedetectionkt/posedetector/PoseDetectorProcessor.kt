@@ -77,7 +77,7 @@ class PoseDetectorProcessor(
             }
     }
 
-    /*override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
+    override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
         return detector
             .process(image)
             .continueWith(
@@ -93,7 +93,7 @@ class PoseDetectorProcessor(
                 }
                 PoseWithClassification(pose, classificationResult)
             }
-    }*/
+    }
 
     override fun onSuccess(
         results: PoseWithClassification,
