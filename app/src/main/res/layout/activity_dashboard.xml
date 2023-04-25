@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".DashboardActivity">
     <Button
+        android:id="@+id/poseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pose"
+        android:layout_marginTop="30dp"
+        />
+    <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

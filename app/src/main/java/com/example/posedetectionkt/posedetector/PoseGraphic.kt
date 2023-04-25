@@ -16,10 +16,6 @@ class PoseGraphic
 internal constructor(
     overlay: GraphicOverlay,
     private val pose: Pose,
-    private val showInFrameLikelihood: Boolean,
-    private val visualizeZ: Boolean,
-    private val rescaleZForVisualization: Boolean,
-    private val poseClassification: List<String>
 ) : Graphic(overlay) {
   private var zMin = java.lang.Float.MAX_VALUE
   private var zMax = java.lang.Float.MIN_VALUE
@@ -54,7 +50,7 @@ internal constructor(
 
     // Draw pose classification text.
     val classificationX = POSE_CLASSIFICATION_TEXT_SIZE * 0.5f
-    for (i in poseClassification.indices) {
+    /*for (i in poseClassification.indices) {
       val classificationY =
         canvas.height -
           (POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size - i).toFloat())
@@ -64,15 +60,15 @@ internal constructor(
         classificationY,
         classificationTextPaint
       )
-    }
+    }*/
 
     // Draw all the points
     for (landmark in landmarks) {
       drawPoint(canvas, landmark, whitePaint)
-      if (visualizeZ && rescaleZForVisualization) {
+      /*if (visualizeZ && rescaleZForVisualization) {
         zMin = min(zMin, landmark.position3D.z)
         zMax = max(zMax, landmark.position3D.z)
-      }
+      }*/
     }
 
     val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
@@ -152,7 +148,7 @@ internal constructor(
     drawLine(canvas, rightHeel, rightFootIndex, rightPaint)
 
     // Draw inFrameLikelihood for all points
-    if (showInFrameLikelihood) {
+    /*if (showInFrameLikelihood) {
       for (landmark in landmarks) {
         canvas.drawText(
           String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
@@ -161,20 +157,12 @@ internal constructor(
           whitePaint
         )
       }
-    }
+    }*/
   }
 
   internal fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {
     val point = landmark.position3D
-    updatePaintColorByZValue(
-      paint,
-      canvas,
-      visualizeZ,
-      rescaleZForVisualization,
-      point.z,
-      zMin,
-      zMax
-    )
+
     canvas.drawCircle(translateX(point.x), translateY(point.y), DOT_RADIUS, paint)
   }
 
@@ -186,18 +174,6 @@ internal constructor(
   ) {
     val start = startLandmark!!.position3D
     val end = endLandmark!!.position3D
-
-    // Gets average z for the current body line
-    val avgZInImagePixel = (start.z + end.z) / 2
-    updatePaintColorByZValue(
-      paint,
-      canvas,
-      visualizeZ,
-      rescaleZForVisualization,
-      avgZInImagePixel,
-      zMin,
-      zMax
-    )
 
     canvas.drawLine(
       translateX(start.x),

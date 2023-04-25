@@ -1,14 +1,15 @@
 package com.example.posedetectionkt
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.posedetectionkt.posedetector.CameraSource
 import com.example.posedetectionkt.posedetector.CameraSourcePreview
 import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.PoseDetectorProcessor
 import com.example.posedetectionkt.preference.PreferenceUtils
+import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import java.io.IOException
 
 class PoseDetector : AppCompatActivity() {
@@ -45,22 +46,16 @@ class PoseDetector : AppCompatActivity() {
         }
 
         try {
-            val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
-            Log.i(TAG, "Using Pose Detector with options $poseDetectorOptions")
-            val shouldShowInFrameLikelihood =
-                PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
-            val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
-            val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
-            val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
+
+            val poseDetectorOptions = PoseDetectorOptions.Builder()
+                .setDetectorMode(PoseDetectorOptions.STREAM_MODE)
+                .setPreferredHardwareConfigs(PoseDetectorOptions.CPU_GPU)
+                .build()
+
             cameraSource!!.setMachineLearningFrameProcessor(
                 PoseDetectorProcessor(
                     this,
                     poseDetectorOptions,
-                    shouldShowInFrameLikelihood,
-                    visualizeZ,
-                    rescaleZ,
-                    runClassification,
-                    isStreamMode = true
                 )
             )
         } catch (e: Exception) {
