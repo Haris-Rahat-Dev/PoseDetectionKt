@@ -8,15 +8,15 @@ import com.example.posedetectionkt.posedetector.CameraSource
 import com.example.posedetectionkt.posedetector.CameraSourcePreview
 import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.PoseDetectorProcessor
-import com.example.posedetectionkt.preference.PreferenceUtils
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import java.io.IOException
 
-class PoseDetector : AppCompatActivity() {
+class PoseDetectorActivity : AppCompatActivity() {
 
     private var cameraSource: CameraSource? = null
     private var preview: CameraSourcePreview? = null
     private var graphicOverlay: GraphicOverlay? = null
+    private var pose: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +33,23 @@ class PoseDetector : AppCompatActivity() {
             Log.d(TAG, "graphicOverlay is null")
         }
 
-        createCameraSource()
+        // get data from intent
+        val data = intent.extras
 
+        if (data == null) {
+            Toast.makeText(
+                applicationContext,
+                "No data available",
+                Toast.LENGTH_LONG
+                ).show()
+            finish()
+        } else {
+            pose = data.getString("pose")
+            createCameraSource(pose)
+        }
     }
 
-    private fun createCameraSource() {
+    private fun createCameraSource(pose: String?) {
         if (cameraSource == null) {
             cameraSource = CameraSource(
                 this,
@@ -56,6 +68,7 @@ class PoseDetector : AppCompatActivity() {
                 PoseDetectorProcessor(
                     this,
                     poseDetectorOptions,
+                    pose
                 )
             )
         } catch (e: Exception) {
@@ -95,7 +108,7 @@ class PoseDetector : AppCompatActivity() {
     public override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        createCameraSource()
+        createCameraSource(pose)
         startCameraSource()
     }
 

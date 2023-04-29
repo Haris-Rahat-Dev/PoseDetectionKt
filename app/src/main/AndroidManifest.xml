@@ -37,7 +37,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".PoseDetector"
+            android:name=".PoseDetectorActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

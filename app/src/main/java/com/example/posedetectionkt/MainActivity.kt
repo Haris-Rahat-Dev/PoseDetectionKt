@@ -1,5 +1,6 @@
 package com.example.posedetectionkt
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,15 +14,16 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(){
 
-    lateinit var fabButton: FloatingActionButton
+    lateinit var nextButton: FloatingActionButton
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fabButton = findViewById(R.id.fabButton)
+        nextButton = findViewById(R.id.nextButton)
 
-        fabButton.setOnClickListener {
+        nextButton.setOnClickListener {
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }

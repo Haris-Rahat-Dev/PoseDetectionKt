@@ -30,6 +30,7 @@
 
         <EditText
             android:id="@+id/email"
+            android:inputType="textEmailAddress"
             android:layout_marginHorizontal="20dp"
             android:layout_below="@+id/textView"
             android:layout_width="match_parent"
@@ -42,6 +43,7 @@
 
         <EditText
             android:id="@+id/password"
+            android:inputType="textPassword"
             android:layout_marginHorizontal="20dp"
             android:layout_below="@+id/email"
             android:layout_width="match_parent"

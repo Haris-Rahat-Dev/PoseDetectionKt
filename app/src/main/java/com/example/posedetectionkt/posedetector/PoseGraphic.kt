@@ -1,28 +1,24 @@
-package com.google.mlkit.vision.demo.kotlin.posedetector
+package com.example.posedetectionkt.posedetector
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.GraphicOverlay.Graphic
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
-import java.lang.Math.max
-import java.lang.Math.min
-import java.util.Locale
 
 /** Draw the detected pose in preview. */
 class PoseGraphic
 internal constructor(
     overlay: GraphicOverlay,
     private val pose: Pose,
+    private val paintColor: Paint
 ) : Graphic(overlay) {
-  private var zMin = java.lang.Float.MAX_VALUE
-  private var zMax = java.lang.Float.MIN_VALUE
+
   private val classificationTextPaint: Paint
-  private val leftPaint: Paint
+  /*private val leftPaint: Paint
   private val rightPaint: Paint
-  private val whitePaint: Paint
+  private val paintColor: Paint*/
 
   init {
     classificationTextPaint = Paint()
@@ -30,16 +26,16 @@ internal constructor(
     classificationTextPaint.textSize = POSE_CLASSIFICATION_TEXT_SIZE
     classificationTextPaint.setShadowLayer(5.0f, 0f, 0f, Color.BLACK)
 
-    whitePaint = Paint()
-    whitePaint.strokeWidth = STROKE_WIDTH
-    whitePaint.color = Color.WHITE
-    whitePaint.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE
-    leftPaint = Paint()
+    /*paintColor = Paint()
+    paintColor.strokeWidth = STROKE_WIDTH
+    paintColor.color = Color.WHITE
+    paintColor.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE*/
+    /*leftPaint = Paint()
     leftPaint.strokeWidth = STROKE_WIDTH
-    leftPaint.color = Color.GREEN
+    leftPaint.color = Color.WHITE
     rightPaint = Paint()
     rightPaint.strokeWidth = STROKE_WIDTH
-    rightPaint.color = Color.YELLOW
+    rightPaint.color = Color.WHITE*/
   }
 
   override fun draw(canvas: Canvas) {
@@ -48,32 +44,14 @@ internal constructor(
       return
     }
 
-    // Draw pose classification text.
-    val classificationX = POSE_CLASSIFICATION_TEXT_SIZE * 0.5f
-    /*for (i in poseClassification.indices) {
-      val classificationY =
-        canvas.height -
-          (POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size - i).toFloat())
-      canvas.drawText(
-        poseClassification[i],
-        classificationX,
-        classificationY,
-        classificationTextPaint
-      )
-    }*/
-
     // Draw all the points
     for (landmark in landmarks) {
-      drawPoint(canvas, landmark, whitePaint)
-      /*if (visualizeZ && rescaleZForVisualization) {
-        zMin = min(zMin, landmark.position3D.z)
-        zMax = max(zMax, landmark.position3D.z)
-      }*/
+      drawPoint(canvas, landmark, paintColor)
     }
 
     val nose = pose.getPoseLandmark(PoseLandmark.NOSE)
-    val lefyEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
-    val lefyEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
+    val leftEyeInner = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_INNER)
+    val leftEye = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
     val leftEyeOuter = pose.getPoseLandmark(PoseLandmark.LEFT_EYE_OUTER)
     val rightEyeInner = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE_INNER)
     val rightEye = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE)
@@ -108,65 +86,53 @@ internal constructor(
     val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
     // Face
-    drawLine(canvas, nose, lefyEyeInner, whitePaint)
-    drawLine(canvas, lefyEyeInner, lefyEye, whitePaint)
-    drawLine(canvas, lefyEye, leftEyeOuter, whitePaint)
-    drawLine(canvas, leftEyeOuter, leftEar, whitePaint)
-    drawLine(canvas, nose, rightEyeInner, whitePaint)
-    drawLine(canvas, rightEyeInner, rightEye, whitePaint)
-    drawLine(canvas, rightEye, rightEyeOuter, whitePaint)
-    drawLine(canvas, rightEyeOuter, rightEar, whitePaint)
-    drawLine(canvas, leftMouth, rightMouth, whitePaint)
+    drawLine(canvas, nose, leftEyeInner, paintColor)
+    drawLine(canvas, leftEyeInner, leftEye, paintColor)
+    drawLine(canvas, leftEye, leftEyeOuter, paintColor)
+    drawLine(canvas, leftEyeOuter, leftEar, paintColor)
+    drawLine(canvas, nose, rightEyeInner, paintColor)
+    drawLine(canvas, rightEyeInner, rightEye, paintColor)
+    drawLine(canvas, rightEye, rightEyeOuter, paintColor)
+    drawLine(canvas, rightEyeOuter, rightEar, paintColor)
+    drawLine(canvas, leftMouth, rightMouth, paintColor)
 
-    drawLine(canvas, leftShoulder, rightShoulder, whitePaint)
-    drawLine(canvas, leftHip, rightHip, whitePaint)
+    drawLine(canvas, leftShoulder, rightShoulder, paintColor)
+    drawLine(canvas, leftHip, rightHip, paintColor)
 
     // Left body
-    drawLine(canvas, leftShoulder, leftElbow, leftPaint)
-    drawLine(canvas, leftElbow, leftWrist, leftPaint)
-    drawLine(canvas, leftShoulder, leftHip, leftPaint)
-    drawLine(canvas, leftHip, leftKnee, leftPaint)
-    drawLine(canvas, leftKnee, leftAnkle, leftPaint)
-    drawLine(canvas, leftWrist, leftThumb, leftPaint)
-    drawLine(canvas, leftWrist, leftPinky, leftPaint)
-    drawLine(canvas, leftWrist, leftIndex, leftPaint)
-    drawLine(canvas, leftIndex, leftPinky, leftPaint)
-    drawLine(canvas, leftAnkle, leftHeel, leftPaint)
-    drawLine(canvas, leftHeel, leftFootIndex, leftPaint)
+    drawLine(canvas, leftShoulder, leftElbow, paintColor)
+    drawLine(canvas, leftElbow, leftWrist, paintColor)
+    drawLine(canvas, leftShoulder, leftHip, paintColor)
+    drawLine(canvas, leftHip, leftKnee, paintColor)
+    drawLine(canvas, leftKnee, leftAnkle, paintColor)
+    drawLine(canvas, leftWrist, leftThumb, paintColor)
+    drawLine(canvas, leftWrist, leftPinky, paintColor)
+    drawLine(canvas, leftWrist, leftIndex, paintColor)
+    drawLine(canvas, leftIndex, leftPinky, paintColor)
+    drawLine(canvas, leftAnkle, leftHeel, paintColor)
+    drawLine(canvas, leftHeel, leftFootIndex, paintColor)
 
     // Right body
-    drawLine(canvas, rightShoulder, rightElbow, rightPaint)
-    drawLine(canvas, rightElbow, rightWrist, rightPaint)
-    drawLine(canvas, rightShoulder, rightHip, rightPaint)
-    drawLine(canvas, rightHip, rightKnee, rightPaint)
-    drawLine(canvas, rightKnee, rightAnkle, rightPaint)
-    drawLine(canvas, rightWrist, rightThumb, rightPaint)
-    drawLine(canvas, rightWrist, rightPinky, rightPaint)
-    drawLine(canvas, rightWrist, rightIndex, rightPaint)
-    drawLine(canvas, rightIndex, rightPinky, rightPaint)
-    drawLine(canvas, rightAnkle, rightHeel, rightPaint)
-    drawLine(canvas, rightHeel, rightFootIndex, rightPaint)
+    drawLine(canvas, rightShoulder, rightElbow, paintColor)
+    drawLine(canvas, rightElbow, rightWrist, paintColor)
+    drawLine(canvas, rightShoulder, rightHip, paintColor)
+    drawLine(canvas, rightHip, rightKnee, paintColor)
+    drawLine(canvas, rightKnee, rightAnkle, paintColor)
+    drawLine(canvas, rightWrist, rightThumb, paintColor)
+    drawLine(canvas, rightWrist, rightPinky, paintColor)
+    drawLine(canvas, rightWrist, rightIndex, paintColor)
+    drawLine(canvas, rightIndex, rightPinky, paintColor)
+    drawLine(canvas, rightAnkle, rightHeel, paintColor)
+    drawLine(canvas, rightHeel, rightFootIndex, paintColor)
 
-    // Draw inFrameLikelihood for all points
-    /*if (showInFrameLikelihood) {
-      for (landmark in landmarks) {
-        canvas.drawText(
-          String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
-          translateX(landmark.position.x),
-          translateY(landmark.position.y),
-          whitePaint
-        )
-      }
-    }*/
   }
 
-  internal fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {
+  private fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {
     val point = landmark.position3D
-
     canvas.drawCircle(translateX(point.x), translateY(point.y), DOT_RADIUS, paint)
   }
 
-  internal fun drawLine(
+  private fun drawLine(
     canvas: Canvas,
     startLandmark: PoseLandmark?,
     endLandmark: PoseLandmark?,

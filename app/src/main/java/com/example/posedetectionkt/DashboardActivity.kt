@@ -31,7 +31,11 @@ class DashboardActivity : AppCompatActivity() {
 
         poseButton.setOnClickListener{
             // go to the pose activity
-            startActivity(Intent(this, PoseDetector::class.java))
+            val intent = Intent(this, PoseDetectorActivity::class.java)
+
+            intent.putExtra("pose", "pushup")
+
+            startActivity(intent)
         }
 
     }
