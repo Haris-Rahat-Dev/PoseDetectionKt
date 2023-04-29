@@ -1,6 +1,7 @@
 package com.example.posedetectionkt
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,7 +14,6 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var poseButton: Button
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
@@ -25,6 +25,13 @@ class DashboardActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener{
             auth.signOut()
+            // remove the stored credentials from the SharedPreferences object
+            val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
+            val editor = sharedPrefs.edit()
+            editor.remove("email")
+            editor.putString("email", null)
+            editor.apply()
+
             // go back to the login activity without intent
             finish()
         }

@@ -9,12 +9,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(){
 
-    lateinit var nextButton: FloatingActionButton
+    private lateinit var nextButton: MaterialButton
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity(){
         val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
 
         // Retrieve the stored credentials
-        val username = sharedPrefs.getString("email", null)
-        if (username != null) {
+        val email = sharedPrefs.getString("email", null)
+        if (email != null) {
             val intent = Intent(this@MainActivity, DashboardActivity::class.java)
             startActivity(intent)
         }
