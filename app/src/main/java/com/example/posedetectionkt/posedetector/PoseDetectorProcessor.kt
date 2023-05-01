@@ -11,7 +11,6 @@ import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import com.google.mlkit.vision.pose.PoseLandmark
-import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -19,13 +18,13 @@ import kotlin.math.atan2
 class PoseDetectorProcessor(
     private val context: Context,
     options: PoseDetectorOptionsBase,
-    pose : String?
+    pose: String?
 ) : VisionProcessorBase(context) {
 
     private val detector: PoseDetector
-    private val pose:  String?
+    private val pose: String?
     private val paintColor: Paint
-    private var reps:  Int = 0
+    private var reps: Int = 0
 
 
     /*private val classificationExecutor: Executor*/
@@ -56,29 +55,21 @@ class PoseDetectorProcessor(
             }
     }
 
-    /*private fun calculateAngle(a: Array<Float>, b: Array<Float>, c: Array<Float>): Float {
-        val pointA = arrayOf(a[0], a[1])
-        val pointB = arrayOf(b[0], b[1])
-        val pointC = arrayOf(c[0], c[1])
 
-        val radians = atan2((pointC[1] - pointB[1]).toDouble(), (pointC[0] - pointB[0]).toDouble()) - atan2(
-            (pointA[1] - pointB[1]).toDouble(), (pointA[0] - pointB[0]).toDouble()
-        )
-        var angle = kotlin.math.abs(radians * 180.0f / PI.toFloat()).toFloat()
-
-        if (angle > 180.0f) {
-            angle = 360.0f - angle
-        }
-
-        return angle
-    }*/
-
-    private fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
+    private fun getAngle(
+        firstPoint: PoseLandmark,
+        midPoint: PoseLandmark,
+        lastPoint: PoseLandmark
+    ): Double {
         var result = Math.toDegrees(
-            (atan2(lastPoint.position.y - midPoint.position.y,
-                lastPoint.position.x - midPoint.position.x)
-                    - atan2(firstPoint.position.y - midPoint.position.y,
-                firstPoint.position.x - midPoint.position.x)).toDouble()
+            (atan2(
+                lastPoint.position.y - midPoint.position.y,
+                lastPoint.position.x - midPoint.position.x
+            )
+                    - atan2(
+                firstPoint.position.y - midPoint.position.y,
+                firstPoint.position.x - midPoint.position.x
+            )).toDouble()
         )
         result = abs(result) // Angle should never be negative
         if (result > 180) {
@@ -90,7 +81,7 @@ class PoseDetectorProcessor(
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
         // TODO: classify poses using angle heuristics for pushups, squats and plank
-        if(this.pose == "pushup") {
+        if (this.pose == "pushup") {
 
             val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
             val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
@@ -119,7 +110,7 @@ class PoseDetectorProcessor(
                     PoseGraphic(
                         graphicOverlay,
                         results,
-                        paintColor
+                        paintColor,
                     )
                 )
             } else {
@@ -128,11 +119,11 @@ class PoseDetectorProcessor(
                     PoseGraphic(
                         graphicOverlay,
                         results,
-                        paintColor
+                        paintColor,
                     )
                 )
             }
-        } else if(this.pose == "squats") {
+        } else if (this.pose == "squats") {
 
             val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
 
@@ -145,13 +136,37 @@ class PoseDetectorProcessor(
             val angle = getAngle(shoulder, hip, knee)
             val angle2 = getAngle(hip, knee, ankle)
 
-            if(angle == 180.0 && angle2 == 180.0) {
+            if (angle == 180.0 && angle2 == 180.0) {
                 Log.d("POSE", "Squatup")
+                paintColor.color = Color.WHITE
+                graphicOverlay.add(
+                    PoseGraphic(
+                        graphicOverlay,
+                        results,
+                        paintColor,
+                    )
+                )
             }
-            if(angle2 < 90.0 && angle2 > 0.0) {
+            if (angle2 < 90.0 && angle2 > 0.0) {
                 Log.d("POSE", "Squatdown")
                 reps += 1
+                paintColor.color = Color.WHITE
+                graphicOverlay.add(
+                    PoseGraphic(
+                        graphicOverlay,
+                        results,
+                        paintColor,
+                    )
+                )
             }
+            paintColor.color = Color.RED
+            graphicOverlay.add(
+                PoseGraphic(
+                    graphicOverlay,
+                    results,
+                    paintColor,
+                )
+            )
         }
     }
 
