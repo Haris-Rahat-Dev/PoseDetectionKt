@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="my_light_primary">#E8184045</color>
+    <color name="underline">#BDB8B8</color>
+
 </resources>

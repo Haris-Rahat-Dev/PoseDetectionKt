@@ -1,6 +1,5 @@
 package com.example.posedetectionkt.posedetector;
 
-/** Describing a frame info. */
 public class FrameMetadata {
 
     private final int width;
@@ -25,7 +24,6 @@ public class FrameMetadata {
         this.rotation = rotation;
     }
 
-    /** Builder of {@link FrameMetadata}. */
     public static class Builder {
 
         private int width;

@@ -13,8 +13,8 @@ import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import com.google.mlkit.vision.pose.PoseLandmark
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.sqrt
 
-/** A processor to run pose detector. */
 class PoseDetectorProcessor(
     private val context: Context,
     options: PoseDetectorOptionsBase,
@@ -25,18 +25,11 @@ class PoseDetectorProcessor(
     private val pose: String?
     private val paintColor: Paint
     private var reps: Int = 0
+    private var stage: String = "none"
 
-
-    /*private val classificationExecutor: Executor*/
-
-    /*private var poseClassifierProcessor: PoseClassifierProcessor? = null*/
-
-    /** Internal class to hold Pose and classification results. */
-//    class PoseWithClassification(val pose: Pose, val classificationResult: List<String>)
 
     init {
         detector = PoseDetection.getClient(options)
-        /*classificationExecutor = Executors.newSingleThreadExecutor()*/
         this.pose = pose
         paintColor = Paint()
         paintColor.strokeWidth = STROKE_WIDTH
@@ -63,12 +56,12 @@ class PoseDetectorProcessor(
     ): Double {
         var result = Math.toDegrees(
             (atan2(
-                lastPoint.position.y - midPoint.position.y,
-                lastPoint.position.x - midPoint.position.x
+                lastPoint.position3D.y - midPoint.position3D.y,
+                lastPoint.position3D.x - midPoint.position3D.x
             )
                     - atan2(
-                firstPoint.position.y - midPoint.position.y,
-                firstPoint.position.x - midPoint.position.x
+                firstPoint.position3D.y - midPoint.position3D.y,
+                firstPoint.position3D.x - midPoint.position3D.x
             )).toDouble()
         )
         result = abs(result) // Angle should never be negative
@@ -78,115 +71,175 @@ class PoseDetectorProcessor(
         return result
     }
 
+    // write a function for calculating distance between two points
+    private fun getDistance(
+        firstPoint: PoseLandmark,
+        lastPoint: PoseLandmark
+    ): Double {
+        val x = firstPoint.position3D.x - lastPoint.position3D.x
+        val y = firstPoint.position3D.y - lastPoint.position3D.y
+        return sqrt((x * x + y * y).toDouble())
+    }
+
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
-        // TODO: classify poses using angle heuristics for pushups, squats and plank
-        if (this.pose == "pushup") {
+        paintColor.color = Color.GREEN
+        graphicOverlay.add(
+            PoseGraphic(
+                graphicOverlay,
+                results,
+                paintColor,
+                "52"
+            )
+        )
+        if (results.allPoseLandmarks.size > 0) {
+            // TODO: classify poses using angle heuristics for pushups, squats and plank
+            if (this.pose == "pushup") {
 
-            val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
-            val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
-            val knee = results.allPoseLandmarks[PoseLandmark.LEFT_KNEE]
-            val ankle = results.allPoseLandmarks[PoseLandmark.LEFT_ANKLE]
+                val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
+                val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
+                val ankle = results.allPoseLandmarks[PoseLandmark.LEFT_ANKLE]
+
+                val angle = getAngle(shoulder, hip, ankle)
+
+                Log.d("PushUpAngle", angle.toString())
+
+                if (angle in 160.0..190.0) {
+                    val elbow = results.allPoseLandmarks[PoseLandmark.LEFT_ELBOW]
+                    val wrist = results.allPoseLandmarks[PoseLandmark.LEFT_WRIST]
+
+                    val angle2 = getAngle(shoulder, elbow, wrist)
+
+                    if (angle2 in 160.0..190.0) {
+                        Log.d("POSE", "Push_up")
+                        stage = "up"
+                        paintColor.color = Color.GREEN
+                        graphicOverlay.add(
+                            PoseGraphic(
+                                graphicOverlay,
+                                results,
+                                paintColor,
+                                "Push Up"
+                            )
+                        )
+                    }
+
+                    if (angle2 in 30.0..90.0 && stage == "up") {
+                        Log.d("POSE", "Push_down")
+                        stage = "down"
+                        reps += 1
+                        paintColor.color = Color.GREEN
+                        graphicOverlay.add(
+                            PoseGraphic(
+                                graphicOverlay,
+                                results,
+                                paintColor,
+                                "Push Down"
+                            )
+                        )
+                    }
+
+                } else {
+                    paintColor.color = Color.RED
+                    graphicOverlay.add(
+                        PoseGraphic(
+                            graphicOverlay,
+                            results,
+                            paintColor,
+                            "Not a push up"
+                        )
+                    )
+                }
+            } else if (this.pose == "squats") {
+
+                val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
+
+                val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
+
+                val knee = results.allPoseLandmarks[PoseLandmark.LEFT_KNEE]
+
+                val angle = getAngle(shoulder, hip, knee)
 
 
-            val angle = getAngle(shoulder, hip, knee)
-            val angle2 = getAngle(hip, knee, ankle)
+                val shoulder_distance =
+                    getDistance(shoulder, results.allPoseLandmarks[PoseLandmark.RIGHT_SHOULDER])
+                val knee_distance =
+                    getDistance(knee, results.allPoseLandmarks[PoseLandmark.RIGHT_KNEE])
+                val min_shoulder_distance = shoulder_distance - shoulder_distance * 0.4
+                val max_shoulder_distance = shoulder_distance + shoulder_distance * 0.4
 
-            if (angle == 180.0 && angle2 == 180.0) {
-                // check if the nose and the elbow are in the same line
+
+                if (knee_distance in min_shoulder_distance..max_shoulder_distance) {
+                    if (angle in 160.0..190.0) {
+                        Log.d("POSE", "Squatup")
+                        stage = "up"
+                        paintColor.color = Color.WHITE
+                        graphicOverlay.add(
+                            PoseGraphic(
+                                graphicOverlay,
+                                results,
+                                paintColor,
+                                "Squat Up"
+                            )
+                        )
+                    }
+                    if (angle in 30.0..90.0 && stage == "up") {
+                        Log.d("POSE", "Squatdown")
+                        reps += 1
+                        paintColor.color = Color.WHITE
+                        graphicOverlay.add(
+                            PoseGraphic(
+                                graphicOverlay,
+                                results,
+                                paintColor,
+                                "Squat Down"
+                            )
+                        )
+                    }
+                } else {
+                    paintColor.color = Color.RED
+                    graphicOverlay.add(
+                        PoseGraphic(
+                            graphicOverlay,
+                            results,
+                            paintColor,
+                            "Not a squat"
+                        )
+                    )
+                }
+            } else {
+                val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
+
                 val elbow = results.allPoseLandmarks[PoseLandmark.LEFT_ELBOW]
+
                 val wrist = results.allPoseLandmarks[PoseLandmark.LEFT_WRIST]
 
-                val angle3 = getAngle(wrist, elbow, shoulder)
+                val angle = getAngle(shoulder, elbow, wrist)
 
-                if (angle3 == 180.0) {
-                    Log.d("POSE", "Pushup")
-                } else {
-                    reps += 1
-                    Log.d("POSE", "Pushdown")
-                }
-                paintColor.color = Color.WHITE
+                Log.d("Left arm angle", angle.toString())
+
+                paintColor.color = Color.GREEN
                 graphicOverlay.add(
                     PoseGraphic(
                         graphicOverlay,
                         results,
                         paintColor,
-                    )
-                )
-            } else {
-                paintColor.color = Color.RED
-                graphicOverlay.add(
-                    PoseGraphic(
-                        graphicOverlay,
-                        results,
-                        paintColor,
+                        angle.toString()
                     )
                 )
             }
-        } else if (this.pose == "squats") {
-
-            val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
-
-            val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
-
-            val knee = results.allPoseLandmarks[PoseLandmark.LEFT_KNEE]
-
-            val ankle = results.allPoseLandmarks[PoseLandmark.LEFT_ANKLE]
-
-            val angle = getAngle(shoulder, hip, knee)
-            val angle2 = getAngle(hip, knee, ankle)
-
-            if (angle == 180.0 && angle2 == 180.0) {
-                Log.d("POSE", "Squatup")
-                paintColor.color = Color.WHITE
-                graphicOverlay.add(
-                    PoseGraphic(
-                        graphicOverlay,
-                        results,
-                        paintColor,
-                    )
-                )
-            }
-            if (angle2 < 90.0 && angle2 > 0.0) {
-                Log.d("POSE", "Squatdown")
-                reps += 1
-                paintColor.color = Color.WHITE
-                graphicOverlay.add(
-                    PoseGraphic(
-                        graphicOverlay,
-                        results,
-                        paintColor,
-                    )
-                )
-            }
+        } else {
             paintColor.color = Color.RED
             graphicOverlay.add(
                 PoseGraphic(
                     graphicOverlay,
                     results,
                     paintColor,
+                    "Not a pose"
                 )
             )
         }
     }
-
-    /*override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
-        return detector
-            .process(image)
-            .continueWith(
-                classificationExecutor
-            ) { task ->
-                val pose = task.getResult()
-                var classificationResult: List<String> = ArrayList()
-                if (runClassification) {
-                    if (poseClassifierProcessor == null) {
-                        poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
-                    }
-                    classificationResult = poseClassifierProcessor!!.getPoseResult(pose)
-                }
-                PoseWithClassification(pose, classificationResult)
-            }
-    }*/
 
 
     override fun onFailure(e: Exception) {
@@ -201,7 +254,7 @@ class PoseDetectorProcessor(
 
     companion object {
         private val TAG = "PoseDetectorProcessor"
-        private val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f
+        private val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 60.0f
         private val STROKE_WIDTH = 10.0f
     }
 }
