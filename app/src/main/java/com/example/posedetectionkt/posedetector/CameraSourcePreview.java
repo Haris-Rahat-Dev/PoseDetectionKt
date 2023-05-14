@@ -8,7 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 
-import com.example.posedetectionkt.preference.PreferenceUtils;
+import com.example.posedetectionkt.utils.preference.PreferenceUtils;
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;

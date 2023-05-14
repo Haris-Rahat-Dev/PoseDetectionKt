@@ -1,4 +1,4 @@
-package com.example.posedetectionkt.preference;
+package com.example.posedetectionkt.utils.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;

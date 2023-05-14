@@ -1,4 +1,4 @@
-package com.example.posedetectionkt
+package com.example.posedetectionkt.ui.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,12 +6,14 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.posedetectionkt.R
+import com.example.posedetectionkt.databinding.ActivityStepsBinding
+import com.example.posedetectionkt.utils.WindowManager
 import com.mikhaellopez.circularprogressbar.CircularProgressBar
 
 class StepsActivity : AppCompatActivity(), SensorEventListener {
@@ -25,12 +27,19 @@ class StepsActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var stepsTaken: TextView
     private lateinit var stepProgressBar: CircularProgressBar
     private lateinit var resetButton: Button
+    private lateinit var binding: ActivityStepsBinding
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_steps)
+        binding = ActivityStepsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        WindowManager.statusBarManager(
+            this,
+            R.color.my_light_primary,
+            false
+        )
         loadData()
 
         resetButton = findViewById(R.id.resetButton)
@@ -42,6 +51,10 @@ class StepsActivity : AppCompatActivity(), SensorEventListener {
         resetButton.setOnClickListener {
             resetSteps()
         }
+
+        binding.appToolbar.tbToolbar.title = "Step Counter"
+
+        binding.appToolbar.tbToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     override fun onResume() {
@@ -49,7 +62,7 @@ class StepsActivity : AppCompatActivity(), SensorEventListener {
         running = true
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
-        if(stepSensor == null) {
+        if (stepSensor == null) {
             // display an error message
             Toast.makeText(this, "No sensor detected on this device", Toast.LENGTH_LONG).show()
         } else {
@@ -59,7 +72,7 @@ class StepsActivity : AppCompatActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if(running) {
+        if (running) {
             totalSteps = event!!.values[0]
             val currentSteps = totalSteps.toInt() - previousTotalSteps.toInt()
             stepsTaken.text = ("$currentSteps")

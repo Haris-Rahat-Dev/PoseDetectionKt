@@ -1,15 +1,15 @@
-package com.example.posedetectionkt
+package com.example.posedetectionkt.ui.activities
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import com.google.android.material.slider.RangeSlider
-import com.google.android.material.slider.Slider
-import java.lang.Math.pow
+import androidx.appcompat.app.AppCompatActivity
+import com.example.posedetectionkt.R
+import com.example.posedetectionkt.databinding.ActivityBmiBinding
+import com.example.posedetectionkt.utils.WindowManager
 import kotlin.math.pow
 
 class BmiActivity : AppCompatActivity() {
@@ -35,11 +35,20 @@ class BmiActivity : AppCompatActivity() {
     private var weight: Int = 40
     private var age: Int = 20
 
+    private lateinit var binding: ActivityBmiBinding
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bmi)
+        binding = ActivityBmiBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        WindowManager.statusBarManager(
+            this,
+            R.color.my_light_primary,
+            false
+        )
+
 
         heightValue = findViewById(R.id.heightValue)
         heightIncrement = findViewById(R.id.heightIncrement)
@@ -62,7 +71,7 @@ class BmiActivity : AppCompatActivity() {
         weightValue.text = weight.toString()
         ageValue.text = age.toString()
 
-        heightIncrement.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+        heightIncrement.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 heightValue.text = progress.toString()
             }
@@ -107,6 +116,10 @@ class BmiActivity : AppCompatActivity() {
             // display the BMI
             displayBMI(bmi)
         }
+
+        binding.appToolbar.tbToolbar.title = "Calculate BMI"
+
+        binding.appToolbar.tbToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun calculateBMI(height: Int, weight: Int): Int {
@@ -117,15 +130,17 @@ class BmiActivity : AppCompatActivity() {
     private fun displayBMI(bmi: Int) {
         // display the BMI and the result/interpretation
         bmiText.text = bmi.toString()
-        if(bmi >= 25){
+        if (bmi >= 25) {
             resultText.text = "Overweight"
-            interpretationText.text = "You have a higher than normal body weight. Try to exercise more."
-        }else if(bmi >= 18.5){
+            interpretationText.text =
+                "You have a higher than normal body weight. Try to exercise more."
+        } else if (bmi >= 18.5) {
             resultText.text = "Normal"
             interpretationText.text = "You have a normal body weight. Good job!"
-        }else{
+        } else {
             resultText.text = "Underweight"
-            interpretationText.text = "You have a lower than normal body weight. You should eat a bit more."
+            interpretationText.text =
+                "You have a lower than normal body weight. You should eat a bit more."
         }
 
     }

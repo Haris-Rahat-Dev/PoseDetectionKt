@@ -2,29 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@color/my_light_primary"
-    android:layout_marginTop="16dp"
-    android:layout_marginStart="16dp"
-    >
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingHorizontal="32dp"
+    android:paddingVertical="32dp">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/login"
-        />
+        android:src="@drawable/login" />
+
     <TextView
         android:id="@+id/profile_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Name"
-        android:textSize="20sp"
         android:textColor="@color/white"
-        />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="30dp"
-        android:background="@color/underline"
-        />
+        android:textSize="20sp" />
 </LinearLayout>

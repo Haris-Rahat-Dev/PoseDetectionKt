@@ -1,9 +1,10 @@
-package com.example.posedetectionkt
+package com.example.posedetectionkt.ui.activities
 
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.posedetectionkt.R
 import com.example.posedetectionkt.posedetector.CameraSource
 import com.example.posedetectionkt.posedetector.CameraSourcePreview
 import com.example.posedetectionkt.posedetector.GraphicOverlay

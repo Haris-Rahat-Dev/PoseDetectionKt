@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="light_black">#656466</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_white">#EFEEF1</color>
     <color name="my_light_primary">#E8184045</color>
     <color name="underline">#BDB8B8</color>
+    <color name="border_color">#D1D1d1</color>
 
 </resources>

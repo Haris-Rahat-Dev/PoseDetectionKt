@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tb_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:layout_centerInParent="true"
+    android:background="@color/my_light_primary"
+    android:ellipsize="marquee"
+    android:gravity="center"
+    android:marqueeRepeatLimit="marquee_forever"
+    android:singleLine="true"
+    android:textAlignment="center"
+    app:navigationIcon="@drawable/ic_arrow_back"
+    app:titleTextColor="@color/white">
+
+</androidx.appcompat.widget.Toolbar>

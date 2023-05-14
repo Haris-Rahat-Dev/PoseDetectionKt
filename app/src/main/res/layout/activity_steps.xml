@@ -4,48 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="20dp"
-    tools:context=".StepsActivity">
+    tools:context=".ui.activities.StepsActivity">
+
+    <include
+        android:id="@+id/app_toolbar"
+        layout="@layout/app_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.mikhaellopez.circularprogressbar.CircularProgressBar
+        android:id="@+id/stepProgressBar"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:id="@+id/stepProgressBar"
         android:layout_centerInParent="true"
         app:cpb_background_progressbar_color="#F2F2F2"
         app:cpb_background_progressbar_width="20dp"
+        app:cpb_progress_max="2500"
         app:cpb_progressbar_color="@color/my_light_primary"
         app:cpb_progressbar_width="15dp"
-        app:cpb_round_border="true"
-        app:cpb_progress_max="2500"
-        />
+        app:cpb_round_border="true" />
+
     <TextView
         android:id="@+id/stepsTaken"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0"
-        android:textSize="40sp"
-        android:textColor="@color/my_light_primary"
         android:layout_centerInParent="true"
-        />
+        android:text="0"
+        android:textColor="@color/my_light_primary"
+        android:textSize="40sp" />
+
     <TextView
         android:id="@+id/totalMax"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="/2500"
-        android:textSize="14sp"
-        android:textColor="@color/my_light_primary"
         android:layout_below="@id/stepsTaken"
         android:layout_centerHorizontal="true"
-        />
+        android:text="/2500"
+        android:textColor="@color/my_light_primary"
+        android:textSize="14sp" />
+
     <Button
+        android:id="@+id/resetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reset"
-        android:textColor="@color/white"
-        android:background="@color/my_light_primary"
-        android:id="@+id/resetButton"
         android:layout_below="@id/stepProgressBar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        />
+        android:background="@drawable/button_background_design"
+        android:text="Reset"
+        android:textColor="@color/white" />
 </RelativeLayout>

@@ -19,48 +19,63 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PoseDetectionKt"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".SplashActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="true">
+            android:name=".ui.activities.WorkoutListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.WebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ArticleDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
+        <activity
+            android:name=".ui.activities.ArtilesActivity"
+            android:exported="false"
+            android:label="Articles"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
+        <activity
+            android:name=".ui.activities.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Design.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".StepsActivity"
-            android:exported="false" />
+            android:name=".ui.activities.StepsActivity"
+            android:exported="false"
+            android:label="Step Counter"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".BmiActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="false" />
+            android:name=".ui.activities.BmiActivity"
+            android:exported="false"
+            android:label="Calculate BMI"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".DashboardActivity"
-            android:exported="false" />
+            android:name=".ui.activities.DashboardActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="false" />
+            android:name=".ui.activities.RegisterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="false" />
+            android:name=".ui.activities.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".PoseDetectorActivity"
-            android:theme="@style/Theme.Design.NoActionBar"
-            android:exported="false" />
+            android:name=".ui.activities.PoseDetectorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Design.NoActionBar">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
-        </activity>
+            android:theme="@style/Theme.Design.Light.NoActionBar" />
     </application>
 
 </manifest>

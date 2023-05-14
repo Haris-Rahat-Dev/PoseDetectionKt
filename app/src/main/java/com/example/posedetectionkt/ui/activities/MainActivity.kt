@@ -1,19 +1,20 @@
-package com.example.posedetectionkt
+package com.example.posedetectionkt.ui.activities
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.material.button.MaterialButton
-import java.util.ArrayList
+import com.example.posedetectionkt.R
+import com.example.posedetectionkt.utils.preference.UserDetails
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     private lateinit var nextButton: Button
 
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity(){
         nextButton = findViewById(R.id.nextButton)
 
         nextButton.setOnClickListener {
+
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
         }
@@ -34,14 +36,14 @@ class MainActivity : AppCompatActivity(){
         }
 
         // Get the SharedPreferences object
-        val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
+//        val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
 
         // Retrieve the stored credentials
-        val email = sharedPrefs.getString("email", null)
-        if (email != null) {
-            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
-            startActivity(intent)
-        }
+//        val email = sharedPrefs.getString("email", null)
+//        if (email != null) {
+//            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
+//            startActivity(intent)
+//        }
 
     }
 
@@ -76,7 +78,10 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun isPermissionGranted(context: Context, permission: String): Boolean {
-        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                context,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
             Log.i(TAG, "Permission granted: $permission")
             return true

@@ -1,6 +1,6 @@
 package com.example.posedetectionkt.posedetector;
 
-import static com.example.posedetectionkt.preference.PreferenceUtils.getCameraPreviewSizePair;
+import static com.example.posedetectionkt.utils.preference.PreferenceUtils.getCameraPreviewSizePair;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
