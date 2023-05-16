@@ -13,7 +13,6 @@ internal constructor(
     overlay: GraphicOverlay,
     private val pose: Pose,
     private val paintColor: Paint,
-    private val text: String
 ) : Graphic(overlay) {
 
     private val classificationTextPaint: Paint
@@ -129,16 +128,6 @@ internal constructor(
         drawLine(canvas, rightIndex, rightPinky, paintColor)
         drawLine(canvas, rightAnkle, rightHeel, paintColor)
         drawLine(canvas, rightHeel, rightFootIndex, paintColor)
-
-        // write the text on the screen by multiplying the text size with the screen width and height
-        canvas.drawText(
-            "Left Shoulder: $text",
-            graphicOverlay.imageWidth.toFloat() * leftShoulder?.position3D?.x!!,
-            graphicOverlay.imageHeight.toFloat() * leftShoulder.position3D.y,
-            paintColor
-        )
-
-
     }
 
     private fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {
@@ -166,7 +155,7 @@ internal constructor(
 
     companion object {
 
-        private val DOT_RADIUS = 15.0f
+        private val DOT_RADIUS = 10.0f
         private val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
     }
 }

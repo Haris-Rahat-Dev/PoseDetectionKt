@@ -13,6 +13,8 @@ import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import com.google.mlkit.vision.pose.PoseLandmark
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
 class PoseDetectorProcessor(
@@ -89,7 +91,6 @@ class PoseDetectorProcessor(
                 graphicOverlay,
                 results,
                 paintColor,
-                "52"
             )
         )
         if (results.allPoseLandmarks.size > 0) {
@@ -119,7 +120,6 @@ class PoseDetectorProcessor(
                                 graphicOverlay,
                                 results,
                                 paintColor,
-                                "Push Up"
                             )
                         )
                     }
@@ -134,7 +134,6 @@ class PoseDetectorProcessor(
                                 graphicOverlay,
                                 results,
                                 paintColor,
-                                "Push Down"
                             )
                         )
                     }
@@ -146,53 +145,55 @@ class PoseDetectorProcessor(
                             graphicOverlay,
                             results,
                             paintColor,
-                            "Not a push up"
                         )
                     )
                 }
-            } else if (this.pose == "squats") {
+            } else if (this.pose == "squat") {
 
                 val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
 
                 val hip = results.allPoseLandmarks[PoseLandmark.LEFT_HIP]
 
-                val knee = results.allPoseLandmarks[PoseLandmark.LEFT_KNEE]
+                val ankle = results.allPoseLandmarks[PoseLandmark.LEFT_ANKLE]
 
-                val angle = getAngle(shoulder, hip, knee)
-
+                val angle = getAngle(shoulder, hip, ankle)
 
                 val shoulder_distance =
                     getDistance(shoulder, results.allPoseLandmarks[PoseLandmark.RIGHT_SHOULDER])
-                val knee_distance =
-                    getDistance(knee, results.allPoseLandmarks[PoseLandmark.RIGHT_KNEE])
-                val min_shoulder_distance = shoulder_distance - shoulder_distance * 0.4
-                val max_shoulder_distance = shoulder_distance + shoulder_distance * 0.4
+                val ankle_distance =
+                    getDistance(
+                        ankle,
+                        results.allPoseLandmarks[PoseLandmark.RIGHT_ANKLE]
+                    ).roundToInt()
+                val min_shoulder_distance =
+                    (shoulder_distance - shoulder_distance * 0.4).roundToInt()
+                val max_shoulder_distance =
+                    (shoulder_distance + shoulder_distance * 0.4).roundToInt()
 
 
-                if (knee_distance in min_shoulder_distance..max_shoulder_distance) {
+                if (ankle_distance in min_shoulder_distance..max_shoulder_distance) {
                     if (angle in 160.0..190.0) {
                         Log.d("POSE", "Squatup")
                         stage = "up"
-                        paintColor.color = Color.WHITE
+                        paintColor.color = Color.GREEN
                         graphicOverlay.add(
                             PoseGraphic(
                                 graphicOverlay,
                                 results,
                                 paintColor,
-                                "Squat Up"
                             )
                         )
                     }
+
                     if (angle in 30.0..90.0 && stage == "up") {
                         Log.d("POSE", "Squatdown")
                         reps += 1
-                        paintColor.color = Color.WHITE
+                        paintColor.color = Color.GREEN
                         graphicOverlay.add(
                             PoseGraphic(
                                 graphicOverlay,
                                 results,
                                 paintColor,
-                                "Squat Down"
                             )
                         )
                     }
@@ -203,7 +204,6 @@ class PoseDetectorProcessor(
                             graphicOverlay,
                             results,
                             paintColor,
-                            "Not a squat"
                         )
                     )
                 }
@@ -224,7 +224,6 @@ class PoseDetectorProcessor(
                         graphicOverlay,
                         results,
                         paintColor,
-                        angle.toString()
                     )
                 )
             }
@@ -235,7 +234,6 @@ class PoseDetectorProcessor(
                     graphicOverlay,
                     results,
                     paintColor,
-                    "Not a pose"
                 )
             )
         }

@@ -51,12 +51,6 @@ class LoginActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         val user = auth.currentUser
                         // store the user in the phone memory
-//                        val sharedPref = getSharedPreferences("user", Context.MODE_PRIVATE)
-//                        val editor = sharedPref.edit()
-//                        editor.putString("email", email)
-//                        editor.putString("password", password)
-//                        editor.apply()
-                        // go to the main activity
 
                         UserDetails(this@LoginActivity).setUserEmail(email)
                         UserDetails(this@LoginActivity).setIsUserLoggedIn(true)

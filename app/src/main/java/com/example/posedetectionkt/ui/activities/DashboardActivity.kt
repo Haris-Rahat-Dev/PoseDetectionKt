@@ -3,6 +3,7 @@ package com.example.posedetectionkt.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -45,6 +46,11 @@ class DashboardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
 
+        // set the profile_name in the navigation drawer header
+        val headerView = navView.getHeaderView(0)
+        val profileName = headerView.findViewById<TextView>(R.id.profile_name)
+        profileName.text = UserDetails(this).getUserEmail()
+
         // set the home fragment as the default fragment and set it to be checked
         replaceFragment(HomeFragment(), "Home")
         navView.setCheckedItem(R.id.nav_home)
@@ -62,7 +68,7 @@ class DashboardActivity : AppCompatActivity() {
 
                 R.id.nav_explore -> {
                     binding.drawerLayout.close()
-                    startActivity(Intent(this@DashboardActivity, ArtilesActivity::class.java))
+                    startActivity(Intent(this@DashboardActivity, ArticlesActivity::class.java))
                 }
 
                 R.id.nav_logout -> {

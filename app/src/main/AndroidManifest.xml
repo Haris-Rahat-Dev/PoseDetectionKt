@@ -32,7 +32,7 @@
             android:exported="false"
             android:theme="@style/Theme.Design.Light.NoActionBar" />
         <activity
-            android:name=".ui.activities.ArtilesActivity"
+            android:name=".ui.activities.ArticlesActivity"
             android:exported="false"
             android:label="Articles"
             android:theme="@style/Theme.Design.Light.NoActionBar" />

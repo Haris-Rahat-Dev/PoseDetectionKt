@@ -22,16 +22,22 @@ class WorkoutListActivity : AppCompatActivity() {
             false
         )
 
+        val intent = Intent(this@WorkoutListActivity, PoseDetectorActivity::class.java)
+
         binding.appToolbar.tbToolbar.title = "Workout"
+        binding.appToolbar.tbToolbar.setNavigationOnClickListener { onBackPressed() }
 
         binding.cvOne.setOnClickListener {
-            startActivity(Intent(this@WorkoutListActivity, PoseDetectorActivity::class.java))
+            intent.putExtra("pose", "pushup")
+            startActivity(intent)
         }
         binding.cvTwo.setOnClickListener {
-            startActivity(Intent(this@WorkoutListActivity, PoseDetectorActivity::class.java))
+            intent.putExtra("pose", "squat")
+            startActivity(intent)
         }
         binding.cvThree.setOnClickListener {
-            startActivity(Intent(this@WorkoutListActivity, PoseDetectorActivity::class.java))
+            intent.putExtra("pose", "plank")
+            startActivity(intent)
         }
     }
 }

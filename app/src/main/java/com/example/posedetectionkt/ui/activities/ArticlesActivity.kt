@@ -19,7 +19,7 @@ import com.example.posedetectionkt.utils.Loading
 import com.example.posedetectionkt.utils.WindowManager
 
 
-class ArtilesActivity : AppCompatActivity() {
+class ArticlesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityArtilesBinding
 
@@ -68,9 +68,11 @@ class ArtilesActivity : AppCompatActivity() {
     }
 
     private fun getArticles(searchingText: String) {
-        if (searchingText.isEmpty())
-
-            if (articlesList.isEmpty()) loading.show()
+        var query: String = searchingText
+        if (query == "fitness") {
+            loading.show()
+        }
+        /*if (articlesList.isEmpty()) loading.show()*/
         AndroidNetworking.get("https://newsapi.org/v2/everything?q=$searchingText&apikey=bdd64b44460e4a238f141f941c9a8faa")
             .setPriority(Priority.HIGH).build()
             .getAsObject(ApiResponse::class.java, object : ParsedRequestListener<ApiResponse> {

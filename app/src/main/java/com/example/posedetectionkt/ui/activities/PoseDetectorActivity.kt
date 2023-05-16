@@ -2,7 +2,9 @@ package com.example.posedetectionkt.ui.activities
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.CompoundButton
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.posedetectionkt.R
 import com.example.posedetectionkt.posedetector.CameraSource
@@ -12,7 +14,8 @@ import com.example.posedetectionkt.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import java.io.IOException
 
-class PoseDetectorActivity : AppCompatActivity() {
+
+class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChangeListener {
 
     private var cameraSource: CameraSource? = null
     private var preview: CameraSourcePreview? = null
@@ -22,6 +25,10 @@ class PoseDetectorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pose_detector)
+
+        val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
+        facingSwitch.setOnCheckedChangeListener(this)
+
         Log.d(TAG, "onCreate")
 
         preview = findViewById(R.id.preview_view)
@@ -42,7 +49,7 @@ class PoseDetectorActivity : AppCompatActivity() {
                 applicationContext,
                 "No data available",
                 Toast.LENGTH_LONG
-                ).show()
+            ).show()
             finish()
         } else {
             pose = data.getString("pose")
@@ -104,6 +111,19 @@ class PoseDetectorActivity : AppCompatActivity() {
                 cameraSource = null
             }
         }
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+        Log.d(TAG, "Set facing")
+        if (cameraSource != null) {
+            if (isChecked) {
+                cameraSource?.setFacing(CameraSource.CAMERA_FACING_FRONT)
+            } else {
+                cameraSource?.setFacing(CameraSource.CAMERA_FACING_BACK)
+            }
+        }
+        preview?.stop()
+        startCameraSource()
     }
 
     public override fun onResume() {

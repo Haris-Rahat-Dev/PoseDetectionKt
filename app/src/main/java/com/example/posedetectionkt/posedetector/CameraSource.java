@@ -331,6 +331,15 @@ public class CameraSource {
         bytesToByteBuffer.clear();
     }
 
+    /**
+     * Changes the facing of the camera.
+     */
+    public synchronized void setFacing(int facing) {
+        if ((facing != CAMERA_FACING_BACK) && (facing != CAMERA_FACING_FRONT)) {
+            throw new IllegalArgumentException("Invalid camera: " + facing);
+        }
+        this.facing = facing;
+    }
 
     /**
      * Returns the preview size that is currently in use by the underlying camera.
