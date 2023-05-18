@@ -121,24 +121,24 @@ class BmiActivity : AppCompatActivity() {
         binding.appToolbar.tbToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun calculateBMI(height: Int, weight: Int): Double {
-        return (weight / (height * height)).toDouble()
+    private fun calculateBMI(height: Int, weight: Int): Int {
+        return (weight / (height / 100.0).pow(2)).toInt()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun displayBMI(bmi: Double) {
+    private fun displayBMI(bmi: Int) {
         // display the BMI and the result/interpretation
         // round the BMI to 2 decimal places
-        bmiText.text = String.format("%.2f", bmi)
+        bmiText.text = bmi.toString()
         when (bmi) {
-            in 0.0..18.4 -> {
+            in 0..18 -> {
                 resultText.text = "Underweight"
                 interpretationText.text =
                     "You have a lower than normal body weight. You should eat a bit more."
                 return
             }
 
-            in 18.5..24.9 -> {
+            in 18..25 -> {
                 resultText.text = "Normal"
                 interpretationText.text = "You have a normal body weight. Good job!"
                 return

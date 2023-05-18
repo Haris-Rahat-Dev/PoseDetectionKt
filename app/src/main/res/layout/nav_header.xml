@@ -12,7 +12,7 @@
         android:id="@+id/profile_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/login" />
+        android:src="@drawable/home" />
 
     <TextView
         android:id="@+id/profile_name"
