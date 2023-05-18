@@ -53,29 +53,7 @@ class PoseDetectorProcessor(
                 it.result
             }
     }
-
-
-    private fun getAngle(
-        firstPoint: PoseLandmark,
-        midPoint: PoseLandmark,
-        lastPoint: PoseLandmark
-    ): Double {
-        var result = Math.toDegrees(
-            (atan2(
-                lastPoint.position3D.y - midPoint.position3D.y,
-                lastPoint.position3D.x - midPoint.position3D.x
-            )
-                    - atan2(
-                firstPoint.position3D.y - midPoint.position3D.y,
-                firstPoint.position3D.x - midPoint.position3D.x
-            )).toDouble()
-        )
-        result = abs(result) // Angle should never be negative
-        if (result > 180) {
-            result = 360.0 - result // Always get the acute representation of the angle
-        }
-        return result
-    }
+    
 
     // write a function for calculating distance between two points
     private fun getDistance(
