@@ -17,6 +17,15 @@ class UserDetails(context: Context) {
         userDetailEditor = userDetail.edit()
     }
 
+    fun setUserName(userName: String) {
+        userDetailEditor.putString("name", userName)
+        userDetailEditor.apply()
+    }
+
+    fun getUserName(): String {
+        return userDetail.getString("name", "").toString()
+    }
+
     fun setUserEmail(userEmail: String) {
         userDetailEditor.putString("email", userEmail)
         userDetailEditor.apply()
@@ -35,7 +44,8 @@ class UserDetails(context: Context) {
         return userDetail.getBoolean("isLoggedIn", false)
 
     }
-    fun clearData(){
+
+    fun clearData() {
         userDetailEditor.clear()
     }
 }

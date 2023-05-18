@@ -35,16 +35,6 @@ class MainActivity : AppCompatActivity() {
             getRuntimePermissions()
         }
 
-        // Get the SharedPreferences object
-//        val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
-
-        // Retrieve the stored credentials
-//        val email = sharedPrefs.getString("email", null)
-//        if (email != null) {
-//            val intent = Intent(this@MainActivity, DashboardActivity::class.java)
-//            startActivity(intent)
-//        }
-
     }
 
     private fun allRuntimePermissionsGranted(): Boolean {

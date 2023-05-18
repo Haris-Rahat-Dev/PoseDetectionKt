@@ -49,7 +49,7 @@ class DashboardActivity : AppCompatActivity() {
         // set the profile_name in the navigation drawer header
         val headerView = navView.getHeaderView(0)
         val profileName = headerView.findViewById<TextView>(R.id.profile_name)
-        profileName.text = UserDetails(this).getUserEmail()
+        profileName.text = UserDetails(this).getUserName()
 
         // set the home fragment as the default fragment and set it to be checked
         replaceFragment(HomeFragment(), "Home")
@@ -62,9 +62,9 @@ class DashboardActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment(), it.title.toString())
                 }
 
-                R.id.menu_profile -> {
+                /*R.id.menu_profile -> {
                     binding.drawerLayout.close()
-                }
+                }*/
 
                 R.id.nav_explore -> {
                     binding.drawerLayout.close()
@@ -74,12 +74,6 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.nav_logout -> {
                     auth = FirebaseAuth.getInstance()
                     auth.signOut()
-                    // remove the stored credentials from the SharedPreferences object
-//                    val sharedPrefs = getSharedPreferences("user", Context.MODE_PRIVATE)
-//                    val editor = sharedPrefs.edit()
-//                    editor.remove("email")
-//                    editor.putString("email", null)
-//                    editor.apply()
 
                     UserDetails(this).clearData()
 

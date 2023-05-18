@@ -24,13 +24,24 @@
             app:civ_border_color="#FF000000"
             app:civ_border_width="2dp" />
 
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/edittext_background"
+            android:hint="Enter Name"
+            android:inputType="text"
+            android:textColor="@color/my_light_primary"
+            android:textColorHint="@color/my_light_primary" />
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/edittext_background"
             android:hint="Enter Email"

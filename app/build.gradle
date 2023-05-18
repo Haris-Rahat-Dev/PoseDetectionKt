@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.guava:guava:27.1-android'
     implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.0'
 
     // Core library
     androidTestImplementation 'androidx.test:core:1.5.0'

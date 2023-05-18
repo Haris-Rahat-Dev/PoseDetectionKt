@@ -53,6 +53,7 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
             finish()
         } else {
             pose = data.getString("pose")
+
             createCameraSource(pose)
         }
     }
