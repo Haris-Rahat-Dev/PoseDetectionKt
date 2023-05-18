@@ -12,7 +12,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
-import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
+import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.IOException
@@ -20,7 +20,7 @@ import java.nio.ByteBuffer
 
 class PoseDetectorProcessor(
     private val context: Context,
-    options: PoseDetectorOptionsBase,
+    options: AccuratePoseDetectorOptions,
     pose: String?
 ) : VisionProcessorBase(context) {
 
@@ -30,7 +30,10 @@ class PoseDetectorProcessor(
     private var reps: Int = 0
     private var stage: String = "none"
     private var lastStage: String = "none"
-    val toneGen: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+    private var prevStage: String = "none"
+    private var repCounted = false
+    private lateinit var predictedClass: String
+    private val toneGen: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100);
     private lateinit var model: Pointnet
     private lateinit var inputFeature0: TensorBuffer
     private val classMap = mapOf(
@@ -115,15 +118,25 @@ class PoseDetectorProcessor(
                 }
             }
             // Retrieve the predicted class label based on the max probability index
-            val predictedClass = classMap[maxProbabilityIndex]
+            predictedClass = classMap[maxProbabilityIndex].toString()
             Log.d("PoseDetectorProcessor", "Predicted class: $predictedClass")
-            if (predictedClass == pose + "_up" || predictedClass == pose + "_down") {
+            val poseUp = pose + "_up"
+            val poseDown = pose + "_down"
+            if (predictedClass == classMap.entries.find { it.value == poseUp }?.value ||
+                predictedClass == classMap.entries.find { it.value == poseDown }?.value
+            ) {
                 // Check if stage has changed
                 if (predictedClass != stage && predictedClass != lastStage) {
+                    val prevStage = stage
                     stage = predictedClass
-                    reps++
-                    println("$pose count: $reps")
-                    toneGen.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
+                    if (prevStage == poseUp && stage == poseDown && !repCounted) {
+                        reps++
+                        repCounted = true
+                        println("$pose count: $reps")
+                    } else if (prevStage == poseDown && stage == poseUp) {
+                        repCounted = false
+                    }
+                    toneGen.startTone(ToneGenerator.TONE_CDMA_PIP, 150)
                 }
                 lastStage = predictedClass
 
@@ -134,18 +147,18 @@ class PoseDetectorProcessor(
                         results,
                         paintColor,
                         reps.toString(),
-                        stage
+                        predictedClass
                     )
                 )
             } else {
-                paintColor.color = Color.GREEN
+                paintColor.color = Color.RED
                 graphicOverlay.add(
                     PoseGraphic(
                         graphicOverlay,
                         results,
                         paintColor,
                         reps.toString(),
-                        stage
+                        predictedClass
                     )
                 )
             }
