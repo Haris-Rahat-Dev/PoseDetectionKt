@@ -3,7 +3,10 @@ package com.example.posedetectionkt.posedetector
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.media.AudioManager
+import android.media.ToneGenerator
 import android.util.Log
+import com.example.posedetectionkt.utils.preference.UserDetails
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
@@ -28,6 +31,7 @@ class PoseDetectorProcessor(
     private val paintColor: Paint
     private var reps: Int = 0
     private var stage: String = "none"
+    val toneGen: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
 
     init {
@@ -85,14 +89,6 @@ class PoseDetectorProcessor(
 
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
-        paintColor.color = Color.GREEN
-        graphicOverlay.add(
-            PoseGraphic(
-                graphicOverlay,
-                results,
-                paintColor,
-            )
-        )
         if (results.allPoseLandmarks.size > 0) {
             // TODO: classify poses using angle heuristics for pushups, squats and plank
             if (this.pose == "pushup") {
@@ -120,6 +116,8 @@ class PoseDetectorProcessor(
                                 graphicOverlay,
                                 results,
                                 paintColor,
+                                reps.toString(),
+                                stage
                             )
                         )
                     }
@@ -128,12 +126,15 @@ class PoseDetectorProcessor(
                         Log.d("POSE", "Push_down")
                         stage = "down"
                         reps += 1
+                        toneGen.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                         paintColor.color = Color.GREEN
                         graphicOverlay.add(
                             PoseGraphic(
                                 graphicOverlay,
                                 results,
                                 paintColor,
+                                reps.toString(),
+                                stage
                             )
                         )
                     }
@@ -145,6 +146,8 @@ class PoseDetectorProcessor(
                             graphicOverlay,
                             results,
                             paintColor,
+                            reps.toString(),
+                            stage
                         )
                     )
                 }
@@ -181,6 +184,8 @@ class PoseDetectorProcessor(
                                 graphicOverlay,
                                 results,
                                 paintColor,
+                                reps.toString(),
+                                stage
                             )
                         )
                     }
@@ -188,12 +193,15 @@ class PoseDetectorProcessor(
                     if (angle in 30.0..90.0 && stage == "up") {
                         Log.d("POSE", "Squatdown")
                         reps += 1
+                        toneGen.startTone(ToneGenerator.TONE_CDMA_PIP, 150);
                         paintColor.color = Color.GREEN
                         graphicOverlay.add(
                             PoseGraphic(
                                 graphicOverlay,
                                 results,
                                 paintColor,
+                                reps.toString(),
+                                stage
                             )
                         )
                     }
@@ -204,28 +212,11 @@ class PoseDetectorProcessor(
                             graphicOverlay,
                             results,
                             paintColor,
+                            reps.toString(),
+                            stage
                         )
                     )
                 }
-            } else {
-                val shoulder = results.allPoseLandmarks[PoseLandmark.LEFT_SHOULDER]
-
-                val elbow = results.allPoseLandmarks[PoseLandmark.LEFT_ELBOW]
-
-                val wrist = results.allPoseLandmarks[PoseLandmark.LEFT_WRIST]
-
-                val angle = getAngle(shoulder, elbow, wrist)
-
-                Log.d("Left arm angle", angle.toString())
-
-                paintColor.color = Color.GREEN
-                graphicOverlay.add(
-                    PoseGraphic(
-                        graphicOverlay,
-                        results,
-                        paintColor,
-                    )
-                )
             }
         } else {
             paintColor.color = Color.RED
@@ -234,6 +225,8 @@ class PoseDetectorProcessor(
                     graphicOverlay,
                     results,
                     paintColor,
+                    reps.toString(),
+                    stage
                 )
             )
         }

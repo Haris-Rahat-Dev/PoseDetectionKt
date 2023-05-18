@@ -35,6 +35,16 @@ class UserDetails(context: Context) {
         return userDetail.getString("email", "").toString()
     }
 
+    /*fun setUserReps(reps: Int) {
+        userDetailEditor.putInt("reps", reps)
+        userDetailEditor.apply()
+    }
+
+    fun getUserReps(reps: Int) {
+        userDetail.getInt("reps", 0).toString()
+    }*/
+
+
     fun setIsUserLoggedIn(status: Boolean) {
         userDetailEditor.putBoolean("isLoggedIn", status)
         userDetailEditor.apply()
@@ -42,7 +52,6 @@ class UserDetails(context: Context) {
 
     fun getIsUserLoggedIn(): Boolean {
         return userDetail.getBoolean("isLoggedIn", false)
-
     }
 
     fun clearData() {

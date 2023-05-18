@@ -29,15 +29,18 @@ class WorkoutListActivity : AppCompatActivity() {
 
         binding.cvOne.setOnClickListener {
             intent.putExtra("pose", "pushup")
+            intent.putExtra("hintText", "https://www.youtube.com/watch?v=IODxDxX7oi4&t")
             startActivity(intent)
         }
         binding.cvTwo.setOnClickListener {
             intent.putExtra("pose", "squat")
+            intent.putExtra("hintText", "https://www.youtube.com/watch?v=YaXPRqUwItQ&t")
             startActivity(intent)
         }
-        binding.cvThree.setOnClickListener {
+        /*binding.cvThree.setOnClickListener {
             intent.putExtra("pose", "plank")
+            intent.putExtra("hintText", "https://www.youtube.com/watch?v=IODxDxX7oi4&t")
             startActivity(intent)
-        }
+        }*/
     }
 }

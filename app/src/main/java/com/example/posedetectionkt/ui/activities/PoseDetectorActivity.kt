@@ -1,8 +1,11 @@
 package com.example.posedetectionkt.ui.activities
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.CompoundButton
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +24,7 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
     private var preview: CameraSourcePreview? = null
     private var graphicOverlay: GraphicOverlay? = null
     private var pose: String? = null
+    private lateinit var hintText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +32,16 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
 
         val facingSwitch = findViewById<ToggleButton>(R.id.facing_switch)
         facingSwitch.setOnCheckedChangeListener(this)
+
+        // get data from intent
+        val data = intent.extras
+
+        hintText = findViewById(R.id.hint)
+        hintText.setOnClickListener {
+            // create an intent for opening a youtube link
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data?.getString("hintText")))
+            startActivity(intent)
+        }
 
         Log.d(TAG, "onCreate")
 
@@ -40,9 +54,6 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
         if (graphicOverlay == null) {
             Log.d(TAG, "graphicOverlay is null")
         }
-
-        // get data from intent
-        val data = intent.extras
 
         if (data == null) {
             Toast.makeText(

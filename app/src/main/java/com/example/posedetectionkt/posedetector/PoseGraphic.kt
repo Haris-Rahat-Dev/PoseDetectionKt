@@ -13,32 +13,19 @@ internal constructor(
     overlay: GraphicOverlay,
     private val pose: Pose,
     private val paintColor: Paint,
+    private val reps: String,
+    private val stage: String,
 ) : Graphic(overlay) {
 
-    private val classificationTextPaint: Paint
+    private val infoText: Paint
     private val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
 
-    /*private val leftPaint: Paint
-    private val rightPaint: Paint
-    private val paintColor: Paint*/
-    private val graphicOverlay: GraphicOverlay = overlay
 
     init {
-        classificationTextPaint = Paint()
-        classificationTextPaint.color = Color.WHITE
-        classificationTextPaint.textSize = POSE_CLASSIFICATION_TEXT_SIZE
-        classificationTextPaint.setShadowLayer(5.0f, 0f, 0f, Color.BLACK)
-
-        /*paintColor = Paint()
-        paintColor.strokeWidth = STROKE_WIDTH
-        paintColor.color = Color.WHITE
-        paintColor.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE*/
-        /*leftPaint = Paint()
-        leftPaint.strokeWidth = STROKE_WIDTH
-        leftPaint.color = Color.WHITE
-        rightPaint = Paint()
-        rightPaint.strokeWidth = STROKE_WIDTH
-        rightPaint.color = Color.WHITE*/
+        infoText = Paint()
+        infoText.color = Color.WHITE
+        infoText.textSize = POSE_CLASSIFICATION_TEXT_SIZE
+        infoText.setShadowLayer(5.0f, 0f, 0f, Color.BLACK)
     }
 
     override fun draw(canvas: Canvas) {
@@ -46,6 +33,10 @@ internal constructor(
         if (landmarks.isEmpty()) {
             return
         }
+
+        // show the reps counter on the screen
+        canvas.drawText("Reps: $reps", 20.0F, 50.0F, infoText)
+        canvas.drawText("Stage: $stage", 20.0F, 120.0F, infoText)
 
 
         // Draw all the points
@@ -154,8 +145,6 @@ internal constructor(
     }
 
     companion object {
-
         private val DOT_RADIUS = 10.0f
-        private val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
     }
 }
