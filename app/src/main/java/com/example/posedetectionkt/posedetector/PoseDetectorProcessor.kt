@@ -6,23 +6,21 @@ import android.graphics.Paint
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.Log
-import com.example.posedetectionkt.utils.preference.UserDetails
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
-import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 import kotlin.math.sqrt
 
 class PoseDetectorProcessor(
     private val context: Context,
-    options: PoseDetectorOptionsBase,
+    options: AccuratePoseDetectorOptions,
     pose: String?
 ) : VisionProcessorBase(context) {
 
@@ -172,7 +170,6 @@ class PoseDetectorProcessor(
                     (shoulder_distance - shoulder_distance * 0.4).roundToInt()
                 val max_shoulder_distance =
                     (shoulder_distance + shoulder_distance * 0.4).roundToInt()
-
 
                 if (ankle_distance in min_shoulder_distance..max_shoulder_distance) {
                     if (angle in 160.0..190.0) {

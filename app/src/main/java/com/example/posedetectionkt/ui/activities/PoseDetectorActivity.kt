@@ -14,7 +14,7 @@ import com.example.posedetectionkt.posedetector.CameraSource
 import com.example.posedetectionkt.posedetector.CameraSourcePreview
 import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.PoseDetectorProcessor
-import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
+import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import java.io.IOException
 
 
@@ -79,9 +79,9 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
 
         try {
 
-            val poseDetectorOptions = PoseDetectorOptions.Builder()
-                .setDetectorMode(PoseDetectorOptions.STREAM_MODE)
-                .setPreferredHardwareConfigs(PoseDetectorOptions.CPU_GPU)
+            val poseDetectorOptions = AccuratePoseDetectorOptions.Builder()
+                .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
+                .setPreferredHardwareConfigs(AccuratePoseDetectorOptions.CPU_GPU)
                 .build()
 
             cameraSource!!.setMachineLearningFrameProcessor(
