@@ -115,7 +115,7 @@ class PoseDetectorProcessor(
                                 results,
                                 paintColor,
                                 reps.toString(),
-                                stage
+                                "push$stage"
                             )
                         )
                     }
@@ -132,7 +132,7 @@ class PoseDetectorProcessor(
                                 results,
                                 paintColor,
                                 reps.toString(),
-                                stage
+                                "push$stage"
                             )
                         )
                     }
@@ -182,7 +182,7 @@ class PoseDetectorProcessor(
                                 results,
                                 paintColor,
                                 reps.toString(),
-                                stage
+                                "push$stage"
                             )
                         )
                     }
@@ -198,7 +198,7 @@ class PoseDetectorProcessor(
                                 results,
                                 paintColor,
                                 reps.toString(),
-                                stage
+                                "push$stage"
                             )
                         )
                     }
