@@ -372,9 +372,9 @@ class PoseDetectorProcessor(
                 val angle = getAngle(shoulder!!, hip!!, ankle!!)
 
                 val shoulderDistance =
-                    getDistance(shoulder!!, results.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)!!)
+                    getDistance(shoulder, results.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)!!)
                 val ankleDistance =
-                    getDistance(ankle!!, results.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)!!)
+                    getDistance(ankle, results.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)!!)
                 val minShoulderDistance =
                     shoulderDistance - shoulderDistance * 0.5
                 val maxShoulderDistance =
