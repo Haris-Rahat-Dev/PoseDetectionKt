@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.Log
 import android.widget.Toast
+import com.example.posedetectionkt.ui.activities.AlertDialog
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
@@ -28,10 +29,12 @@ class PoseDetectorProcessor(
     private val paintColor: Paint = Paint()
     private var reps: Int = 0
     private var stage: String = "none"
+    private lateinit var poseAlertDialog: AlertDialog
 
     init {
         paintColor.strokeWidth = STROKE_WIDTH
         paintColor.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE
+        poseAlertDialog = AlertDialog(context, "No Pose detected")
     }
 
     override fun stop() {
@@ -77,6 +80,7 @@ class PoseDetectorProcessor(
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
         if (results.allPoseLandmarks.isNotEmpty()) {
+            poseAlertDialog.dismiss()
             if (pose == "pushup") {
                 val shoulder = results.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
                 val hip = results.getPoseLandmark(PoseLandmark.LEFT_HIP)
@@ -137,7 +141,7 @@ class PoseDetectorProcessor(
                 }
             }
         } else {
-            Toast.makeText(context, "No pose detected", Toast.LENGTH_LONG).show()
+            poseAlertDialog.show()
             paintColor.color = Color.RED
 
         }
