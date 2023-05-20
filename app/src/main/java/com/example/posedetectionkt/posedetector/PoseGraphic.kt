@@ -106,6 +106,7 @@ internal constructor(
         drawLine(canvas, leftIndex, leftPinky, paintColor)
         drawLine(canvas, leftAnkle, leftHeel, paintColor)
         drawLine(canvas, leftHeel, leftFootIndex, paintColor)
+        drawLine(canvas, leftAnkle, leftFootIndex, paintColor)
 
         // Right body
         drawLine(canvas, rightShoulder, rightElbow, paintColor)
@@ -119,6 +120,7 @@ internal constructor(
         drawLine(canvas, rightIndex, rightPinky, paintColor)
         drawLine(canvas, rightAnkle, rightHeel, paintColor)
         drawLine(canvas, rightHeel, rightFootIndex, paintColor)
+        drawLine(canvas, rightAnkle, rightFootIndex, paintColor)
     }
 
     private fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {
@@ -145,6 +147,6 @@ internal constructor(
     }
 
     companion object {
-        private val DOT_RADIUS = 10.0f
+        private val DOT_RADIUS = 8.0f
     }
 }

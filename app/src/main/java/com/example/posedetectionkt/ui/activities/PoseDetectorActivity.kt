@@ -43,8 +43,6 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
             startActivity(intent)
         }
 
-        Log.d(TAG, "onCreate")
-
         preview = findViewById(R.id.preview_view)
         if (preview == null) {
             Log.d(TAG, "Preview is null")
@@ -67,6 +65,9 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
 
             createCameraSource(pose)
         }
+
+        // keep screen on while detecting
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun createCameraSource(pose: String?) {
@@ -88,7 +89,7 @@ class PoseDetectorActivity : AppCompatActivity(), CompoundButton.OnCheckedChange
                 PoseDetectorProcessor(
                     this,
                     poseDetectorOptions,
-                    pose
+                    pose,
                 )
             )
         } catch (e: Exception) {
