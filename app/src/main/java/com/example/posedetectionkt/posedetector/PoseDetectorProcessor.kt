@@ -203,16 +203,15 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.Log
 import com.example.posedetectionkt.ml.Pointnet
+import com.example.posedetectionkt.ui.activities.AlertDialog
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
-import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.IOException
-import java.nio.ByteBuffer
 
 class PoseDetectorProcessor(
     private val context: Context,
@@ -231,13 +230,14 @@ class PoseDetectorProcessor(
     private lateinit var predictedClass: String
     private val toneGen: ToneGenerator = ToneGenerator(AudioManager.STREAM_MUSIC, 100);
     private lateinit var model: Pointnet
-    private lateinit var inputFeature0: TensorBuffer
+    private lateinit var inputFeature: TensorBuffer
     private val classMap = mapOf(
         0 to "pushup_down",
         1 to "pushup_up",
         2 to "squat_down",
         3 to "squat_up"
     )
+    private lateinit var poseAlertDialog: AlertDialog
 
     init {
         detector = PoseDetection.getClient(options)
@@ -245,6 +245,7 @@ class PoseDetectorProcessor(
         paintColor = Paint()
         paintColor.strokeWidth = STROKE_WIDTH
         paintColor.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE
+        poseAlertDialog = AlertDialog(context, "No  pose detected")
 
         // Set the stage and last stage based on the pose selected
         when (pose) {
@@ -261,8 +262,6 @@ class PoseDetectorProcessor(
 
         try {
             model = Pointnet.newInstance(context)
-            // Creates inputs for reference.
-            inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 33, 3), DataType.FLOAT32)
             // Releases model resources if no longer used.
         } catch (exception: IOException) {
             Log.d("PoseDetectorProcessor", "Error: ${exception.message}")
@@ -282,27 +281,12 @@ class PoseDetectorProcessor(
     }
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
+        poseAlertDialog.dismiss()
         if (results.allPoseLandmarks.isNotEmpty()) {
-            val bufferCapacity =
-                results.allPoseLandmarks.size * 3 * Float.SIZE_BYTES // Assuming 3 floats per landmark (x, y, z)
-            val byteBuffer = ByteBuffer.allocate(bufferCapacity)
-            val poseLandmarks = results.allPoseLandmarks
-            for (landmark in poseLandmarks) {
-                // Extract relevant information from the pose landmarks
-                val landmarkX = landmark.position3D.x
-                val landmarkY = landmark.position3D.y
-                val landmarkZ = landmark.position3D.z
-
-                // Assuming `byteBuffer` is a `ByteBuffer` with the appropriate capacity
-                // and that `float` values are being stored in the buffer
-                byteBuffer.putFloat(landmarkX)
-                byteBuffer.putFloat(landmarkY)
-                byteBuffer.putFloat(landmarkZ)
-            }
-            inputFeature0.loadBuffer(byteBuffer)
+            // Creates inputs for reference.
 
             // Runs model inference and gets result.
-            val outputs = model.process(inputFeature0)
+            val outputs = model.process(inputFeature)
             val outputFeature0 = outputs.outputFeature0AsTensorBuffer
             val predictions = FloatArray(outputFeature0.shape[1])
             outputFeature0.floatArray.copyInto(predictions)
@@ -343,27 +327,19 @@ class PoseDetectorProcessor(
 
             // Create and add PoseGraphic to the graphic overlay
             paintColor.color = if (predictedClass == stage) Color.GREEN else Color.RED
-            graphicOverlay.add(
-                PoseGraphic(
-                    graphicOverlay,
-                    results,
-                    paintColor,
-                    reps.toString(),
-                    predictedClass
-                )
-            )
         } else {
+            poseAlertDialog.show()
             paintColor.color = Color.RED
-            graphicOverlay.add(
-                PoseGraphic(
-                    graphicOverlay,
-                    results,
-                    paintColor,
-                    reps.toString(),
-                    stage
-                )
-            )
         }
+        graphicOverlay.add(
+            PoseGraphic(
+                graphicOverlay,
+                results,
+                paintColor,
+                reps.toString(),
+                stage
+            )
+        )
     }
 
     override fun onFailure(e: Exception) {
