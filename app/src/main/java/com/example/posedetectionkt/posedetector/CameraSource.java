@@ -73,7 +73,7 @@ public class CameraSource {
     private final IdentityHashMap<byte[], ByteBuffer> bytesToByteBuffer = new IdentityHashMap<>();
     protected Activity activity;
     private Camera camera;
-    private int facing = CAMERA_FACING_FRONT;
+    private int facing = CAMERA_FACING_BACK;
     /**
      * Rotation of the device, and thus the associated preview images captured from the device.
      */

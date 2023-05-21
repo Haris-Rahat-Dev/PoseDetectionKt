@@ -1,5 +1,6 @@
 package com.example.posedetectionkt.ui.activities
 
+import PoseDetectorProcessor
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -13,7 +14,6 @@ import com.example.posedetectionkt.R
 import com.example.posedetectionkt.posedetector.CameraSource
 import com.example.posedetectionkt.posedetector.CameraSourcePreview
 import com.example.posedetectionkt.posedetector.GraphicOverlay
-import com.example.posedetectionkt.posedetector.PoseDetectorProcessor
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import java.io.IOException
 
