@@ -76,8 +76,8 @@ class PoseDetectorProcessor(
     }
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
+        poseAlertDialog.dismiss()
         if (results.allPoseLandmarks.size > 0) {
-            poseAlertDialog.dismiss()
             val poseLandmarks = results.allPoseLandmarks
             val landmarkCoordinates = FloatArray(poseLandmarks.size * 3)
             for ((index, landmark) in poseLandmarks.withIndex()) {
