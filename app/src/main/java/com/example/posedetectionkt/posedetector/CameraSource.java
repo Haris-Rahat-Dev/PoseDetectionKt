@@ -42,7 +42,7 @@ public class CameraSource {
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_WIDTH = 480;
     public static final int DEFAULT_REQUESTED_CAMERA_PREVIEW_HEIGHT = 360;
 
-    private static final String TAG = "MIDemoApp:CameraSource";
+    private static final String TAG = "PoseDetectionKt:CameraSource";
 
     /**
      * The dummy surface texture must be assigned a chosen name. Since we never use an OpenGL context,

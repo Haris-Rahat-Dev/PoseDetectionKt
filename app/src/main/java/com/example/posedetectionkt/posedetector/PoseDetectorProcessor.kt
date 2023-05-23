@@ -88,27 +88,32 @@ class PoseDetectorProcessor(
                 landmarkCoordinates[index * 3 + 2] =
                     landmark.position3D.z / graphicOverlay.imageWidth
             }
-            Log.d("PoseArry", "Pose array size: ${landmarkCoordinates.contentToString()}")
+            Log.d("PoseArray", "Pose array size: ${landmarkCoordinates.contentToString()}")
 
             inputFeature0.loadArray(landmarkCoordinates)
             val outputs = model.process(inputFeature0)
             val outputFeature0 = outputs.outputFeature0AsTensorBuffer
             val predictions = outputFeature0.floatArray
             val maxProbabilityIndex = predictions.indices.maxByOrNull { predictions[it] }
-
+            // TODO: check if predicted pose and the user selected pose are the same
             val currentStage = classMap[maxProbabilityIndex ?: 0].toString()
-            if (currentStage != stage && currentStage != lastStage) {
-                prevStage = stage
-                stage = currentStage
-                if (prevStage == pose + "_up" && stage == pose + "_down" && !repCounted) {
-                    reps++
-                    repCounted = true
-                } else if (prevStage == pose + "_down" && stage == pose + "_up") {
-                    repCounted = false
+            if (!currentStage.contains(this.pose!!)) {
+                paintColor.color = Color.RED
+                lastStage = "Wrong"
+            } else {
+                if (currentStage != stage && currentStage != lastStage) {
+                    prevStage = stage
+                    stage = currentStage
+                    if (prevStage == pose + "_up" && stage == pose + "_down" && !repCounted) {
+                        reps++
+                        repCounted = true
+                    } else if (prevStage == pose + "_down" && stage == pose + "_up") {
+                        repCounted = false
+                    }
                 }
+                lastStage = currentStage
+                paintColor.color = Color.GREEN
             }
-            lastStage = currentStage
-            paintColor.color = Color.GREEN
         } else {
             poseAlertDialog.show()
             paintColor.color = Color.RED
@@ -152,3 +157,5 @@ class PoseDetectorProcessor(
                 Log.d("Array", "Array: ${landmarkList.contentToString()}")
             }
 */
+
+// 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
