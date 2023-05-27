@@ -106,6 +106,7 @@ internal constructor(
         drawLine(canvas, leftIndex, leftPinky, paintColor)
         drawLine(canvas, leftAnkle, leftHeel, paintColor)
         drawLine(canvas, leftHeel, leftFootIndex, paintColor)
+        drawLine(canvas, leftFootIndex, leftAnkle, paintColor)
 
         // Right body
         drawLine(canvas, rightShoulder, rightElbow, paintColor)
@@ -119,6 +120,7 @@ internal constructor(
         drawLine(canvas, rightIndex, rightPinky, paintColor)
         drawLine(canvas, rightAnkle, rightHeel, paintColor)
         drawLine(canvas, rightHeel, rightFootIndex, paintColor)
+        drawLine(canvas, rightFootIndex, rightAnkle, paintColor)
     }
 
     private fun drawPoint(canvas: Canvas, landmark: PoseLandmark, paint: Paint) {

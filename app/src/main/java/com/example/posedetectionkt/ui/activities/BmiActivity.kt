@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.posedetectionkt.R
 import com.example.posedetectionkt.databinding.ActivityBmiBinding
 import com.example.posedetectionkt.utils.WindowManager
-import kotlin.math.pow
 
 class BmiActivity : AppCompatActivity() {
 
@@ -48,7 +47,6 @@ class BmiActivity : AppCompatActivity() {
             false
         )
 
-
         heightValue = findViewById(R.id.heightValue)
         heightIncrement = findViewById(R.id.heightIncrement)
 
@@ -72,7 +70,8 @@ class BmiActivity : AppCompatActivity() {
 
         heightIncrement.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                heightValue.text = progress.toString()
+                height = progress
+                heightValue.text = height.toString()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -82,7 +81,6 @@ class BmiActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 // do nothing
             }
-
         })
 
         weightIncrement.setOnClickListener {
@@ -121,27 +119,27 @@ class BmiActivity : AppCompatActivity() {
         binding.appToolbar.tbToolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun calculateBMI(height: Int, weight: Int): Int {
-        return (weight / (height / 100.0).pow(2)).toInt()
+    private fun calculateBMI(height: Int, weight: Int): Double {
+        val heightInMeters = height / 100.0
+        return weight / (heightInMeters * heightInMeters)
     }
 
     @SuppressLint("SetTextI18n")
-    private fun displayBMI(bmi: Int) {
+    private fun displayBMI(bmi: Double) {
         // display the BMI and the result/interpretation
         // round the BMI to 2 decimal places
-        bmiText.text = bmi.toString()
-        when (bmi) {
-            in 0..18 -> {
+        val roundedBMI = String.format("%.2f", bmi)
+        bmiText.text = roundedBMI
+        when {
+            bmi < 18.5 -> {
                 resultText.text = "Underweight"
                 interpretationText.text =
                     "You have a lower than normal body weight. You should eat a bit more."
-                return
             }
 
-            in 18..25 -> {
+            bmi < 25 -> {
                 resultText.text = "Normal"
                 interpretationText.text = "You have a normal body weight. Good job!"
-                return
             }
 
             else -> {
@@ -151,5 +149,4 @@ class BmiActivity : AppCompatActivity() {
             }
         }
     }
-
 }

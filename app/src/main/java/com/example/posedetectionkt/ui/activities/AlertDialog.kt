@@ -20,6 +20,9 @@ class AlertDialog(context: Context, message: String) : Dialog(context) {
         setOnCancelListener(null)
         window!!.setBackgroundDrawableResource(android.R.color.transparent)
         val view: View = LayoutInflater.from(context).inflate(R.layout.alert_dialog_layout, null)
+        view.setOnClickListener {
+            dismiss()
+        }
         val tvMessage = view.findViewById<TextView>(R.id.tv_alert_message)
 
         tvMessage.text = message

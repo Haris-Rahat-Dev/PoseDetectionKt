@@ -1,10 +1,9 @@
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
-import android.media.AudioManager
-import android.media.ToneGenerator
 import android.util.Log
 import com.example.posedetectionkt.ml.Pointnet
+import com.example.posedetectionkt.ml.Pointnetv2
 import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.PoseGraphic
 import com.example.posedetectionkt.posedetector.VisionProcessorBase
@@ -18,9 +17,7 @@ import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.IOException
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.FloatBuffer
+import java.util.concurrent.Executor
 
 class PoseDetectorProcessor(
     private val context: Context,
@@ -29,6 +26,7 @@ class PoseDetectorProcessor(
 ) : VisionProcessorBase(context) {
 
     private val detector: PoseDetector
+    private var classificationExecutor: Executor
     private val paintColor: Paint
     private val pose: String?
     private var reps: Int = 0
@@ -37,7 +35,7 @@ class PoseDetectorProcessor(
     private var prevStage: String = "none"
     private var repCounted = false
     private lateinit var predictedClass: String
-    private lateinit var model: Pointnet
+    private lateinit var model: Pointnetv2
     private val classMap = mapOf(
         0 to "pushup_down",
         1 to "pushup_up",
@@ -54,9 +52,10 @@ class PoseDetectorProcessor(
         paintColor.textSize = IN_FRAME_LIKELIHOOD_TEXT_SIZE
         this.pose = pose
         poseAlertDialog = AlertDialog(context, "No pose detected")
+        classificationExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
         try {
-            model = Pointnet.newInstance(context)
-            inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 33, 3), DataType.FLOAT32)
+            model = Pointnetv2.newInstance(context)
+//            inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 33, 3), DataType.FLOAT32)
             // Releases model resources if no longer used.
         } catch (exception: IOException) {
             Log.d("PoseDetectorProcessor", "Error: ${exception.message}")
@@ -72,13 +71,16 @@ class PoseDetectorProcessor(
 
     override fun detectInImage(image: InputImage): Task<Pose> {
         return detector
-            .process(image)
+            .process(image).continueWith(classificationExecutor) {
+                return@continueWith it.result
+            }
     }
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
-        poseAlertDialog.dismiss()
+//        poseAlertDialog.dismiss()
         if (results.allPoseLandmarks.size > 0) {
             val poseLandmarks = results.allPoseLandmarks
+            inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 33, 3), DataType.FLOAT32)
             val landmarkCoordinates = FloatArray(poseLandmarks.size * 3)
             for ((index, landmark) in poseLandmarks.withIndex()) {
                 // Assuming the model expects normalized landmark coordinates.
@@ -88,14 +90,15 @@ class PoseDetectorProcessor(
                 landmarkCoordinates[index * 3 + 2] =
                     landmark.position3D.z / graphicOverlay.imageWidth
             }
-            Log.d("PoseArray", "Pose array size: ${landmarkCoordinates.contentToString()}")
-
+            Log.d(
+                "PoseDetectorProcessor",
+                "landmarkCoordinates: ${landmarkCoordinates.contentToString()}"
+            )
             inputFeature0.loadArray(landmarkCoordinates)
             val outputs = model.process(inputFeature0)
             val outputFeature0 = outputs.outputFeature0AsTensorBuffer
             val predictions = outputFeature0.floatArray
             val maxProbabilityIndex = predictions.indices.maxByOrNull { predictions[it] }
-            // TODO: check if predicted pose and the user selected pose are the same
             val currentStage = classMap[maxProbabilityIndex ?: 0].toString()
             if (!currentStage.contains(this.pose!!)) {
                 paintColor.color = Color.RED
@@ -115,7 +118,7 @@ class PoseDetectorProcessor(
                 paintColor.color = Color.GREEN
             }
         } else {
-            poseAlertDialog.show()
+//            poseAlertDialog.show()
             paintColor.color = Color.RED
 
         }
@@ -145,17 +148,5 @@ class PoseDetectorProcessor(
         private val STROKE_WIDTH = 10.0f
     }
 }
-
-
-/*for (landmark in results.allPoseLandmarks) {
-                val landmarkList = floatArrayOf(
-                    landmark.position3D.x / graphicOverlay.imageWidth,
-                    landmark.position3D.y / graphicOverlay.imageHeight,
-                    (landmark.position3D.z / graphicOverlay.imageWidth) * 2 - 1
-                )
-                inputFeature0.loadArray(landmarkList)
-                Log.d("Array", "Array: ${landmarkList.contentToString()}")
-            }
-*/
 
 // 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
