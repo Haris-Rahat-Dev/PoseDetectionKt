@@ -105,6 +105,7 @@ class PoseDetectorProcessor(
                         paintColor.color = Color.GREEN
                     }
                 } else {
+                    stage = "Incorrect posture"
                     paintColor.color = Color.RED
                 }
             } else if (pose == "squat") {
@@ -137,11 +138,13 @@ class PoseDetectorProcessor(
                     paintColor.color = Color.GREEN
 
                 } else {
+                    stage = "Incorrect posture"
                     paintColor.color = Color.RED
                 }
             }
         } else {
             poseAlertDialog.show()
+            stage = "No Pose"
             paintColor.color = Color.RED
 
         }
