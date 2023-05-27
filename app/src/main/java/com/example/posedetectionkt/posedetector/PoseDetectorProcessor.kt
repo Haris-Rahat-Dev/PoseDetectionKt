@@ -80,7 +80,7 @@ class PoseDetectorProcessor(
 
     override fun onSuccess(results: Pose, graphicOverlay: GraphicOverlay) {
         if (results.allPoseLandmarks.isNotEmpty()) {
-            poseAlertDialog.dismiss()
+            /*poseAlertDialog.dismiss()*/
             if (pose == "pushup") {
                 val shoulder = results.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
                 val hip = results.getPoseLandmark(PoseLandmark.LEFT_HIP)
@@ -143,7 +143,7 @@ class PoseDetectorProcessor(
                 }
             }
         } else {
-            poseAlertDialog.show()
+            /*poseAlertDialog.show()*/
             stage = "No Pose"
             paintColor.color = Color.RED
 
