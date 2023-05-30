@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.posedetectionkt.R
+import com.example.posedetectionkt.ui.activities.DashboardActivity
 import com.example.posedetectionkt.utils.Loading
 import com.example.posedetectionkt.utils.preference.UserDetails
 import com.google.firebase.firestore.FirebaseFirestore
@@ -49,6 +50,8 @@ class ProfileFragment : Fragment() {
                 .addOnSuccessListener {
                     loading.dismiss()
                     UserDetails(requireActivity()).setUserName(name)
+                    // Update the username in the drawer
+                    (activity as? DashboardActivity)?.updateDrawerUsername(name)
                     Toast.makeText(requireContext(), "Profile Updated", Toast.LENGTH_LONG).show()
                 }
                 .addOnFailureListener { e ->

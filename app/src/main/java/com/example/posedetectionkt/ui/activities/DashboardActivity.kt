@@ -91,19 +91,12 @@ class DashboardActivity : AppCompatActivity() {
 
     }
 
-    override fun onStart() {
-        super.onStart()
+    fun updateDrawerUsername(newUsername: String) {
         val headerView = navView.getHeaderView(0)
         val profileName = headerView.findViewById<TextView>(R.id.profile_name)
-        profileName.text = UserDetails(this).getUserName()
+        profileName.text = newUsername
     }
 
-    override fun onResume() {
-        super.onResume()
-        val headerView = navView.getHeaderView(0)
-        val profileName = headerView.findViewById<TextView>(R.id.profile_name)
-        profileName.text = UserDetails(this).getUserName()
-    }
 
     private fun replaceFragment(fragment: Fragment, title: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
