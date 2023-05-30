@@ -3,7 +3,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
 import com.example.posedetectionkt.ml.Pointnet
-import com.example.posedetectionkt.ml.Pointnetv2
 import com.example.posedetectionkt.posedetector.GraphicOverlay
 import com.example.posedetectionkt.posedetector.PoseGraphic
 import com.example.posedetectionkt.posedetector.VisionProcessorBase
@@ -34,8 +33,7 @@ class PoseDetectorProcessor(
     private var lastStage: String = pose + "_down"
     private var prevStage: String = "none"
     private var repCounted = false
-    private lateinit var predictedClass: String
-    private lateinit var model: Pointnetv2
+    private lateinit var model: Pointnet
     private val classMap = mapOf(
         0 to "pushup_down",
         1 to "pushup_up",
@@ -54,7 +52,7 @@ class PoseDetectorProcessor(
         poseAlertDialog = AlertDialog(context, "No pose detected")
         classificationExecutor = java.util.concurrent.Executors.newSingleThreadExecutor()
         try {
-            model = Pointnetv2.newInstance(context)
+            model = Pointnet.newInstance(context)
 //            inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 33, 3), DataType.FLOAT32)
             // Releases model resources if no longer used.
         } catch (exception: IOException) {

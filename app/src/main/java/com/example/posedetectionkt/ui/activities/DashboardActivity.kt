@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.example.posedetectionkt.R
 import com.example.posedetectionkt.databinding.ActivityDashboardBinding
 import com.example.posedetectionkt.ui.fragments.HomeFragment
+import com.example.posedetectionkt.ui.fragments.ProfileFragment
 import com.example.posedetectionkt.utils.WindowManager
 import com.example.posedetectionkt.utils.preference.UserDetails
 import com.google.android.material.navigation.NavigationView
@@ -20,7 +21,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var drawerLayout: DrawerLayout
-    private lateinit var auth: FirebaseAuth;
+    private lateinit var auth: FirebaseAuth
+    private lateinit var navView: NavigationView
 
     private lateinit var binding: ActivityDashboardBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +37,7 @@ class DashboardActivity : AppCompatActivity() {
         )
 
         drawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
 
         toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
@@ -62,9 +64,10 @@ class DashboardActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment(), it.title.toString())
                 }
 
-                /*R.id.menu_profile -> {
+                R.id.menu_profile -> {
                     binding.drawerLayout.close()
-                }*/
+                    replaceFragment(ProfileFragment(), it.title.toString())
+                }
 
                 R.id.nav_explore -> {
                     binding.drawerLayout.close()
@@ -86,6 +89,20 @@ class DashboardActivity : AppCompatActivity() {
             true
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val headerView = navView.getHeaderView(0)
+        val profileName = headerView.findViewById<TextView>(R.id.profile_name)
+        profileName.text = UserDetails(this).getUserName()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val headerView = navView.getHeaderView(0)
+        val profileName = headerView.findViewById<TextView>(R.id.profile_name)
+        profileName.text = UserDetails(this).getUserName()
     }
 
     private fun replaceFragment(fragment: Fragment, title: String) {

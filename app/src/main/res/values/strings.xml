@@ -47,5 +47,7 @@
     <string name="pref_title_pose_detector_run_classification" translatable="false">Run AI Classification</string>
     <string name="pref_key_pose_detector_run_classification" translatable="false">pdrc</string>
     <string name="pref_summary_pose_detector_run_classification" translatable="false">Classify squat and pushup poses. Count reps. To get the best classification results based on the current sample data, face the camera side way and make sure your full body is in the frame.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

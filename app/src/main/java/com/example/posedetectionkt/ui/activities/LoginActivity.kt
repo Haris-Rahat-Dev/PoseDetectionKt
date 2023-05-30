@@ -61,6 +61,7 @@ class LoginActivity : AppCompatActivity() {
                                     if (document != null) {
                                         val name = document.getString("name")
                                         // store the user in the phone memory
+                                        UserDetails(this@LoginActivity).setUserId(uid)
                                         UserDetails(this@LoginActivity).setUserName(name!!)
                                         UserDetails(this@LoginActivity).setUserEmail(email)
                                         UserDetails(this@LoginActivity).setIsUserLoggedIn(true)

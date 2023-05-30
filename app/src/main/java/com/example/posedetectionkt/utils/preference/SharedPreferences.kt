@@ -17,6 +17,15 @@ class UserDetails(context: Context) {
         userDetailEditor = userDetail.edit()
     }
 
+    fun setUserId(userId: String) {
+        userDetailEditor.putString("id", userId)
+        userDetailEditor.apply()
+    }
+
+    fun getUserId(): String {
+        return userDetail.getString("id", "").toString()
+    }
+
     fun setUserName(userName: String) {
         userDetailEditor.putString("name", userName)
         userDetailEditor.apply()
